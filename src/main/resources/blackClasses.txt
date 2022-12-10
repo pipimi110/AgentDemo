@@ -1,0 +1,2 @@
+java.util.Date@@toString@@{return "hahaha";}
+test1.lQ@@RF@@{return null;}
