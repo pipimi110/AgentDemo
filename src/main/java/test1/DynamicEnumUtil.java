@@ -19,8 +19,32 @@ import java.util.List;
  * 动态新增枚举工具类
  */
 public class DynamicEnumUtil {
+    private static String pritest1(){
+        System.out.println("pritest1 ing");
+        return "pritest1";
+    }
+    private static String pritest1(String arg,String arg2){
+        return "qwe";
+    }
+    private static String pritest1(String arg){
+        System.out.println("pritest1 ing");
+        return arg+" pritest1";
+    }
+    private static String pritest(){
+        System.out.println("pritest ing");
+        return "pritest";
+    }
 
     public static void main(String[] args) throws Exception{
+        System.out.println(new java.util.Date());
+        System.out.println(DynamicEnumUtil.pritest());
+        System.out.println(DynamicEnumUtil.pritest1());
+        //getDeclaredMethod(methodName)默认获取无参，没有无参获取其他，多态时不能指定
+        //getDeclaredMethod(String name, CtClass[] params)
+        //public CtMethod getMethod(String name, String desc)通过desc参数指定多态
+        System.out.println(DynamicEnumUtil.pritest1("arg1"));
+    }
+    public static void main11(String[] args) throws Exception{
         ClassPool pool = ClassPool.getDefault();
         CtClass ctClass = pool.get(lQ.RF.getClass().getName());
         ctClass.getField("yO");

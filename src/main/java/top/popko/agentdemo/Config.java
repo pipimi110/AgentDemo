@@ -15,7 +15,7 @@ public class Config {
         while (scanner.hasNext()) {
             String line = scanner.nextLine();
             if (!line.equals("")) {
-                String[] blackConfig = line.split("@@");
+                String[] blackConfig = line.split("@@",3);
                 HashMap<String, String> blackMethodMap = blackClassMap.get(blackConfig[0]);
                 if (blackMethodMap == null) {
                     HashMap<String, String> tmpMap = new HashMap();
@@ -34,7 +34,8 @@ public class Config {
 
 
     public static void main(String[] args) {
-
+        new Config();
+        System.out.println();
     }
     public static void main1(String[] args) {
 //        System.loadLibrary("exp");
