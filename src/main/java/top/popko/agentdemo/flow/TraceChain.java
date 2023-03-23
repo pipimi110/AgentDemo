@@ -1,4 +1,4 @@
-package top.popko.agentdemo.context;
+package top.popko.agentdemo.flow;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -29,7 +29,7 @@ public class TraceChain {
     }
 
     public static void main(String[] args) {
-        top.popko.agentdemo.context.TraceChain traceChain = top.popko.agentdemo.context.TraceChain.getInstance();
+        TraceChain traceChain = TraceChain.getInstance();
         traceChain.addElement(Thread.currentThread().getStackTrace()[1].getMethodName());//方法内当前方法名
 //        TraceChain traceChain = TraceChain.getInstance();
         traceChain.addElement("qwe");

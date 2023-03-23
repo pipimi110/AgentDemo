@@ -2,4 +2,4 @@ java.util.Date@@toString:()Ljava/lang/String;@@System.out.println("[]before date
 test1.DynamicEnumUtil@@pritest:()Ljava/lang/String;@@System.out.println("[]before pritest");@@System.out.println("[]after pritest");
 test1.DynamicEnumUtil@@pritest1:()Ljava/lang/String;@@System.out.println("[]before pritest1");@@System.out.println("[]after pritest1");
 test1.DynamicEnumUtil@@pritest1:(Ljava/lang/String;)Ljava/lang/String;@@System.out.println("pritest1 s1 hahaha");
-com.example.demo.controller.DemoController@@sayHello:(Ljava/lang/String;)Ljava/lang/String;@@top.popko.agentdemo.context.TraceChain traceChain = top.popko.agentdemo.context.TraceChain.getInstance();traceChain.addElement(Thread.currentThread().getStackTrace()[1].getMethodName());@@top.popko.agentdemo.context.TraceChain.getInstance().show();
+com.example.demo.controller.DemoController@@sayHello:(Ljava/lang/String;)Ljava/lang/String;@@top.popko.agentdemo.flow.TraceChain traceChain = top.popko.agentdemo.flow.TraceChain.getInstance();traceChain.addElement(Thread.currentThread().getStackTrace()[1].getMethodName());@@top.popko.agentdemo.flow.TraceChain.getInstance().show();

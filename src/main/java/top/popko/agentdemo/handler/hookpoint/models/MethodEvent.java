@@ -1,5 +1,7 @@
 package top.popko.agentdemo.handler.hookpoint.models;
 
+import top.popko.agentdemo.handler.hookpoint.models.policy.TaintPosition;
+
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -11,14 +13,14 @@ import java.util.Set;
  */
 public class MethodEvent {
 //    private static final int MAX_VALUE_LENGTH = 1024;
-//    private int invokeId;
+    private int invokeId;
     public boolean source;
-//    private Set<TaintPosition> sourcePositions;
-    public int[] sourcePositions;
-//    private Set<TaintPosition> targetPositions;
-    public int[] targetPositions;
+    private Set<TaintPosition> sourcePositions;
+//    public int[] sourcePositions;
+    private Set<TaintPosition> targetPositions;
+//    public int[] targetPositions;
     public final String originClassName;
-//    private final String matchedClassName;
+    private final String matchedClassName;
     public final String methodName;
     public final  String signature;
     public Object objectInstance;
@@ -31,7 +33,8 @@ public class MethodEvent {
     public final Set<Integer> targetHashes = new HashSet();
 //    public List<MethodEventTargetRange> targetRanges = new ArrayList();
 //    public List<MethodEventSourceType> sourceTypes;
-    private StackTraceElement callStack;
+    private StackTraceElement
+        callStack;
 
     public static class Parameter {
         private final String index;
@@ -53,14 +56,23 @@ public class MethodEvent {
 //        }
     }
 
-    public MethodEvent(int[] sourcePositions, int[] targetPositions, String originClassName, String methodName, String signature) {
+    public MethodEvent(String originClassName, String matchedClassName, String methodName, String signature, Object objectInstance, Object[] parameterInstances, Object returnInstance) {
         //初始化//规则
-        this.sourcePositions = sourcePositions;
-        this.targetPositions = targetPositions;
+        this.matchedClassName = matchedClassName;
         this.originClassName = originClassName;
         this.methodName = methodName;
         this.signature = signature;
+        this.objectInstance = objectInstance;
+        this.parameterInstances = parameterInstances;
+        this.returnInstance = returnInstance;
         this.source = false;
+    }
+    public int getInvokeId() {
+        return this.invokeId;
+    }
+
+    public void setInvokeId(int invokeId) {
+        this.invokeId = invokeId;
     }
 
     public boolean isSource() {
@@ -79,11 +91,6 @@ public class MethodEvent {
         this.returnInstance = returnInstance;
     }
 
-    public void setAllValue(boolean hasTaint){
-        setObjectValue(hasTaint);
-        setParameterValues(hasTaint);
-        setReturnValue(hasTaint);
-    }
 //    public void setObjectValue(Object obj, boolean hasTaint) {
     public void setObjectValue(boolean hasTaint) {
         Object obj = this.objectInstance;
@@ -92,13 +99,13 @@ public class MethodEvent {
         }
     }
 
-//    public void addParameterValue(int index, Object param, boolean hasTaint) {
-//        if (param != null) {
-//            String indexString = "P" + String.valueOf(index + 1);
-//            Parameter parameter = new Parameter(indexString, this.formatValue(param, hasTaint));
-//            this.parameterValues.add(parameter);
-//        }
-//    }
+    public void addParameterValue(int index, Object param, boolean hasTaint) {
+        if (param != null) {
+            String indexString = "P" + String.valueOf(index + 1);
+            Parameter parameter = new Parameter(indexString, this.formatValue(param, hasTaint));
+            this.parameterValues.add(parameter);
+        }
+    }
     public void setParameterValues(boolean hasTaint) {
         int index = 0;
         Object[] params = this.parameterInstances;
@@ -166,5 +173,10 @@ public class MethodEvent {
 
             return sb.toString();
         }
+    }
+
+    public void setTaintPositions(Set<TaintPosition> sourcePositions, Set<TaintPosition> targetPositions) {
+        this.sourcePositions = sourcePositions;
+        this.targetPositions = targetPositions;
     }
 }

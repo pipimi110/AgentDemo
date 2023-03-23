@@ -8,11 +8,15 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import top.popko.agentdemo.config.ConfigMatcher;
+import top.popko.agentdemo.enhance.ClassContext;
+import top.popko.agentdemo.enhance.plugin.AbstractClassVisitor;
+import top.popko.agentdemo.enhance.plugin.PluginManager;
+import top.popko.agentdemo.enhance.plugin.core.CoreClassVisitor;
 import top.popko.agentdemo.enhance.plugin.core.DispatchClassPlugin;
-import top.popko.agentdemo.handler.hookpoint.IASTClassVisitor;
-import top.popko.agentdemo.handler.hookpoint.SpyDispatcher;
 import top.popko.agentdemo.handler.hookpoint.SpyDispatcherHandler;
 import top.popko.agentdemo.handler.hookpoint.SpyDispatcherImpl;
+import top.popko.agentdemo.handler.hookpoint.models.policy.Policy;
+import top.popko.agentdemo.handler.hookpoint.models.policy.PolicyManager;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
@@ -24,13 +28,17 @@ import java.util.Iterator;
 public class DefineTransformer implements ClassFileTransformer {
     private Config config;
     private ConfigMatcher configMatcher;
+    private static PolicyManager policyManager = PolicyManager.getInstance();
+    private static PluginManager pluginManager = PluginManager.getInstance();
 
     DefineTransformer(Instrumentation inst) {
         this.configMatcher = ConfigMatcher.getInstance();
         this.configMatcher.setInst(inst);
         SpyDispatcherHandler.setDispatcher(new SpyDispatcherImpl());
+        policyManager.loadPolicy(System.getProperty("policyfile"));
     }
-    DefineTransformer(Instrumentation inst,Config javassistConfig) {
+
+    DefineTransformer(Instrumentation inst, Config javassistConfig) {
         this.config = javassistConfig;
     }
 
@@ -39,40 +47,52 @@ public class DefineTransformer implements ClassFileTransformer {
         return asmTransform(loader, className, classBeingRedefined, protectionDomain, classfileBuffer);
     }
 
-    public boolean tmpClassFilter(String classname){
-        if(classname.startsWith("sun")||classname.startsWith("java")){
+    public boolean tmpClassFilter(String classname) {
+        if (classname.startsWith("sun") || classname.startsWith("java") || classname.contains("$")) {
             return false;
         }
         return true;
     }
+
     public byte[] asmTransform(ClassLoader loader, String internalClassName, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
 //        for (String notTransformClass : notTransformList) {
 //            if (internalClassName.startsWith(notTransformClass)) {
 //                return null;
 //            }
 //        }
-        if(internalClassName == null || internalClassName.startsWith("top/popko/agentdemo")){
+        if (internalClassName == null || internalClassName.startsWith("top/popko/agentdemo")) {
             return null;
         }
         if (null == classBeingRedefined && !this.configMatcher.canHook(internalClassName)) {
             return null;
         }
-        if (!tmpClassFilter(internalClassName)){
+        if (!tmpClassFilter(internalClassName)) {
             return null;
         }
         String className = internalClassName.replace("/", ".");
-        return adviceAdapterTest1(classfileBuffer, className);
+        return adviceAdapterTest1(loader, classfileBuffer);
     }
 
-    public byte[] adviceAdapterTest1(byte[] classfileBuffer, String className) {
+    public byte[] adviceAdapterTest1(ClassLoader loader, byte[] classfileBuffer) {
         byte[] originalClassfileBuffer = classfileBuffer;
         ClassReader classReader = new ClassReader(classfileBuffer);
+        ClassContext classContext = new ClassContext(classReader, loader);
+        String className = classContext.getClassName();
+///* 142 */         Set<String> ancestors = this.classDiagram.getDiagram(className);
+///* 143 */         if (ancestors == null) {
+///* 144 */           this.classDiagram.setLoader(loader);
+///* 145 */           this.classDiagram.saveAncestors(className, classContext.getSuperClassName(), classContext.getInterfaces());
+///* 146 */           ancestors = this.classDiagram.getAncestors(className, classContext.getSuperClassName(), classContext
+///* 147 */               .getInterfaces());
+///*     */         }
+///* 149 */         classContext.setAncestors(ancestors);
         ClassWriter classWriter = new ClassWriter(classReader, ClassWriter.COMPUTE_MAXS);
-//        ClassVisitor classVisitor = new IASTClassVisitor(className, classWriter);
-        DispatchClassPlugin dispatchClassPlugin = new DispatchClassPlugin();
-        ClassVisitor classVisitor = dispatchClassPlugin.dispatch(classWriter);
+        AbstractClassVisitor classVisitor = (AbstractClassVisitor) pluginManager.matchNewClassVisitor(classWriter, classContext, policyManager.getPolicy());
         classReader.accept(classVisitor, ClassReader.EXPAND_FRAMES);//触发IASTClassVisitor.visitMethod
-        classfileBuffer = classWriter.toByteArray();
+        //accept()方法满足规则->setTransformed()
+        if (classVisitor.hasTransformed()) {
+            classfileBuffer = classWriter.toByteArray();
+        }
         return classfileBuffer;
     }
 
@@ -101,7 +121,13 @@ public class DefineTransformer implements ClassFileTransformer {
             if (inst.isModifiableClass(aClass)) {
 //                System.out.println(String.format("[TEST] 重新加载"));
                 try {
-                    inst.retransformClasses(aClass);
+                    Policy policy = PolicyManager.getInstance().getPolicy();
+                    if (PolicyManager.isHookClass(aClass.getName()) || (policy != null && policy.isMatchClass(aClass.getName()))) {
+                        //jdk8有的类重载retransformClasses()->retransformClasses0()
+                        //会报错failed to write core dump.
+                        //用规则防止进入
+                        inst.retransformClasses(aClass);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
