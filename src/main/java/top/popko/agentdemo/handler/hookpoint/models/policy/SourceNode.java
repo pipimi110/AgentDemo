@@ -3,7 +3,7 @@ package top.popko.agentdemo.handler.hookpoint.models.policy;
 /*    */ import java.util.Set;
 /*    */ 
 /*    */ public class SourceNode extends TaintFlowNode {
-/*    */   private Set<TaintPosition> sources;
+/*    */
 /*    */   private String[] tags;
 /*    */   
 /*    */   public SourceNode(Set<TaintPosition> sources, Set<TaintPosition> targets, MethodMatcher methodMatcher) {
@@ -15,13 +15,7 @@ package top.popko.agentdemo.handler.hookpoint.models.policy;
 /* 15 */     return PolicyNodeType.SOURCE;
 /*    */   }
 /*    */   
-/*    */   public Set<TaintPosition> getSources() {
-/* 19 */     return this.sources;
-/*    */   }
-/*    */   
-/*    */   public void setSources(Set<TaintPosition> sources) {
-/* 23 */     this.sources = sources;
-/*    */   }
+
 /*    */   
 /*    */   public String[] getTags() {
 /* 27 */     return this.tags;

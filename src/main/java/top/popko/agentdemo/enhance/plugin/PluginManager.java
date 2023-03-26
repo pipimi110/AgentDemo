@@ -3,6 +3,7 @@ package top.popko.agentdemo.enhance.plugin;
 import org.objectweb.asm.ClassVisitor;
 import top.popko.agentdemo.enhance.ClassContext;
 import top.popko.agentdemo.enhance.plugin.core.DispatchClassPlugin;
+import top.popko.agentdemo.enhance.plugin.servlet.DispatchJ2ee;
 import top.popko.agentdemo.enhance.plugin.spring.DispatchSpringApplication;
 import top.popko.agentdemo.handler.hookpoint.models.policy.Policy;
 
@@ -24,6 +25,7 @@ public class PluginManager {
     private void registerPlugins() {
         this.plugins.add(new DispatchSpringApplication());
         this.plugins.add(new DispatchClassPlugin());
+        this.plugins.add(new DispatchJ2ee());
     }
 
     public List<DispatchPlugin> getPlugins() {

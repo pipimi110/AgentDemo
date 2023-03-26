@@ -4,7 +4,6 @@ package top.popko.agentdemo.enhance.asm;
 import org.objectweb.asm.commons.Method;
 import top.popko.agentdemo.handler.hookpoint.SpyDispatcher;
 import top.popko.agentdemo.handler.hookpoint.SpyDispatcherHandler;
-import top.popko.agentdemo.handler.hookpoint.SpyDispatcherImpl;
 
 public interface AsmMethods {
     Method SPY_HANDLER$getDispatcher = AsmMethods.InnerHelper.getAsmMethod(SpyDispatcherHandler.class, "getDispatcher");
@@ -23,8 +22,8 @@ public interface AsmMethods {
     Method SPY$leaveSink = AsmMethods.InnerHelper.getAsmMethod(SpyDispatcher.class, "leaveSink");
     Method SPY$isFirstLevelSink = AsmMethods.InnerHelper.getAsmMethod(SpyDispatcher.class, "isFirstLevelSink");
     Method SPY$collectMethodPool = AsmMethods.InnerHelper.getAsmMethod(SpyDispatcher.class, "collectMethodPool", Object.class, Object[].class, Object.class, String.class, String.class, String.class, String.class, String.class, Boolean.TYPE, Integer.TYPE);
+    //接口也可以查找到相关实例的方法
     Method SPY$collectMethod = AsmMethods.InnerHelper.getAsmMethod(SpyDispatcher.class, "collectMethod", Object.class, Object[].class, Object.class, String.class, String.class, String.class, String.class, String.class, Boolean.TYPE);
-    Method SPYIMPL$collectMethod = AsmMethods.InnerHelper.getAsmMethod(SpyDispatcherImpl.class, "collectMethod", Object.class, Object[].class, Object.class, String.class, String.class, String.class, String.class, String.class, Boolean.TYPE);
     Method SPY$reportService = AsmMethods.InnerHelper.getAsmMethod(SpyDispatcher.class, "reportService", String.class, String.class, String.class, String.class, String.class);
     Method SPY$isReplayRequest = AsmMethods.InnerHelper.getAsmMethod(SpyDispatcher.class, "isReplayRequest");
     Method SPY$isNotReplayRequest = AsmMethods.InnerHelper.getAsmMethod(SpyDispatcher.class, "isNotReplayRequest");

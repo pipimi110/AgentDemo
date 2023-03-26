@@ -1,15 +1,22 @@
 package top.popko.agentdemo;
 
+import top.popko.agentdemo.handler.hookpoint.models.track.RequestContext;
+import top.popko.agentdemo.handler.hookpoint.models.track.TaintHashCodes;
+import top.popko.agentdemo.handler.hookpoint.models.track.TaintMap;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class EngineManager {
-//    private static EngineManager instance;
-//    private final int agentId;
+    public static final TaintHashCodes TAINT_HASH_CODES = new TaintHashCodes();
+    public static final TaintMap TRACK_MAP = new TaintMap();
+
+    private static EngineManager instance;
+    private final int agentId;
 //    private final boolean saveBytecode;
-//    public static final RequestContext REQUEST_CONTEXT = new RequestContext();
+    public static final RequestContext REQUEST_CONTEXT = new RequestContext();
 //    public static final IastTrackMap TRACK_MAP = new IastTrackMap();
 //    public static final IastTaintHashCodes TAINT_HASH_CODES = new IastTaintHashCodes();
 //    public static final TaintRangesPool TAINT_RANGES_POOL = new TaintRangesPool();
@@ -18,33 +25,31 @@ public class EngineManager {
 //    private static final AtomicInteger reqCounts = new AtomicInteger(0);
 //    public static final BooleanThreadLocal ENTER_REPLAY_ENTRYPOINT = new BooleanThreadLocal(false);
 //
-//    public static EngineManager getInstance() {
-//        return instance;
-//    }
-//
-//    public static EngineManager getInstance(int agentId) {
-//        if (instance == null) {
-//            instance = new EngineManager(agentId);
-//        }
-//
-//        return instance;
-//    }
-//
-//    private EngineManager(int agentId) {
+    private EngineManager(int agentId) {
 //        PropertyUtils cfg = PropertyUtils.getInstance();
 //        this.saveBytecode = cfg.isEnableDumpClass();
-//        this.agentId = agentId;
-//    }
-//
-//    public static void cleanThreadState() {
-//        REQUEST_CONTEXT.remove();
-//        TRACK_MAP.remove();
-//        TAINT_HASH_CODES.remove();
+        this.agentId = agentId;
+    }
+    public static EngineManager getInstance() {
+        return instance;
+    }
+
+    public static EngineManager getInstance(int agentId) {
+        if (instance == null) {
+            instance = new EngineManager(agentId);
+        }
+
+        return instance;
+    }
+    public static void cleanThreadState() {
+        REQUEST_CONTEXT.remove();
+        TRACK_MAP.remove();
+        TAINT_HASH_CODES.remove();
 //        TAINT_RANGES_POOL.remove();
 //        ENTER_REPLAY_ENTRYPOINT.remove();
 //        ContextManager.getCONTEXT().remove();
 //        ScopeManager.SCOPE_TRACKER.remove();
-//    }
+    }
 //
 //    public static void maintainRequestCount() {
 //        reqCounts.getAndIncrement();
@@ -99,10 +104,10 @@ public class EngineManager {
 //            headers.put("dt-spandid", spanId);
 //        }
 
-        //线程资源初始化
-//        REQUEST_CONTEXT.set(requestMeta);
-//        TRACK_MAP.set(new HashMap(1024));
-//        TAINT_HASH_CODES.set(new HashSet());
+        //线程资源初始化//todo: 限制重复执行//每个filter都会执行,,用黑名单
+        REQUEST_CONTEXT.set(requestMeta);//todo:防止remove失败?防止处理非http?不初始化thread为空,不能操作
+        TRACK_MAP.set(new HashMap(1024));
+        TAINT_HASH_CODES.set(new HashSet());
 //        TAINT_RANGES_POOL.set(new HashMap());
 //        ScopeManager.SCOPE_TRACKER.getHttpEntryScope().enter();
     }

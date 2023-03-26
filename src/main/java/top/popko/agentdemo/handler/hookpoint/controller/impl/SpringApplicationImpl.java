@@ -1,28 +1,27 @@
-//package top.popko.agentdemo.handler.hookpoint.controller.impl;
-//
-//import io.dongtai.iast.core.handler.hookpoint.IastClassLoader;
-//import io.dongtai.iast.core.handler.hookpoint.api.GetApiThread;
-//import io.dongtai.iast.core.handler.hookpoint.controller.impl.HttpImpl;
-//import io.dongtai.log.DongTaiLog;
-//import java.lang.reflect.Method;
-//
-//public class SpringApplicationImpl {
+package top.popko.agentdemo.handler.hookpoint.controller.impl;
+
+
+import java.lang.reflect.Method;
+
+public class SpringApplicationImpl {
 //    private static IastClassLoader iastClassLoader;
-//    public static Method getAPI;
-//    public static boolean isSend;
-//
-//    public SpringApplicationImpl() {
-//    }
-//
-//    public static void getWebApplicationContext(Object applicationContext) {
+    public static Method getAPI;
+    public static boolean isSend;
+
+    public SpringApplicationImpl() {
+    }
+
+    public static void getWebApplicationContext(Object applicationContext) {
+        //todo: spring需要添加什么http信息吗,感觉不用
+        System.out.println("getWebApplicationContext");
 //        if (!isSend && getClassLoader() != null) {
 //            loadApplicationContext();
 //            GetApiThread getApiThread = new GetApiThread(applicationContext);
 //            getApiThread.start();
 //        }
-//
-//    }
-//
+
+    }
+
 //    private static IastClassLoader getClassLoader() {
 //        iastClassLoader = HttpImpl.getClassLoader();
 //        return iastClassLoader;
@@ -41,4 +40,4 @@
 //        }
 //
 //    }
-//}
+}

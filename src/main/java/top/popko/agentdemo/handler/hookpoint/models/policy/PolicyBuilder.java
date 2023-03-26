@@ -59,7 +59,7 @@ import top.popko.agentdemo.util.StringUtils;
 /*     */       try {
 /*  61 */         PolicyNodeType nodeType = parseNodeType(node);
 /*  62 */         buildSource(policy, nodeType, node);
-///*  63 */         buildPropagator(policy, nodeType, node);
+/*  63 */         buildPropagator(policy, nodeType, node);
 /*  64 */         buildSink(policy, nodeType, node);
 /*  65 */       } catch (PolicyException e) {
 ///*  66 */         DongTaiLog.error(e.getMessage());
@@ -83,22 +83,23 @@ import top.popko.agentdemo.util.StringUtils;
 /*  84 */     policy.addSource(sourceNode);
 /*     */   }
 /*     */   
-///*     */   public static void buildPropagator(Policy policy, PolicyNodeType type, JSONObject node) throws PolicyException {
-///*  88 */     if (!PolicyNodeType.PROPAGATOR.equals(type)) {
-///*     */       return;
-///*     */     }
-///*     */
-///*  92 */     Set<TaintPosition> sources = parseSource(node, type);
-///*  93 */     Set<TaintPosition> targets = parseTarget(node, type);
-///*  94 */     MethodMatcher methodMatcher = buildMethodMatcher(node);
-///*     */
+/*     */   public static void buildPropagator(Policy policy, PolicyNodeType type, JSONObject node) throws PolicyException {
+/*  88 */     if (!PolicyNodeType.PROPAGATOR.equals(type)) {
+/*     */       return;
+/*     */     }
+/*     */
+/*  92 */     Set<TaintPosition> sources = parseSource(node, type);
+/*  93 */     Set<TaintPosition> targets = parseTarget(node, type);
+/*  94 */     MethodMatcher methodMatcher = buildMethodMatcher(node);
+/*     */
 ///*  96 */     PropagatorNode propagatorNode = new PropagatorNode(sources, targets, null, new String[0], methodMatcher);
-///*  97 */     setInheritable(node, propagatorNode);
-///*  98 */     List<String[]> tags = parseTags(node, propagatorNode);
-///*  99 */     propagatorNode.setTags(tags.get(0));
-///* 100 */     propagatorNode.setUntags(tags.get(1));
-///* 101 */     policy.addPropagator(propagatorNode);
-///*     */   }
+/*  96 */     PropagatorNode propagatorNode = new PropagatorNode(sources, targets, new String[0], methodMatcher);
+/*  97 */     setInheritable(node, propagatorNode);
+/*  98 */     List<String[]> tags = parseTags(node, propagatorNode);
+/*  99 */     propagatorNode.setTags(tags.get(0));
+/* 100 */     propagatorNode.setUntags(tags.get(1));
+/* 101 */     policy.addPropagator(propagatorNode);
+/*     */   }
 /*     */   public static void buildSink(Policy policy, PolicyNodeType type, JSONObject node) throws PolicyException {
 /*     */     SinkNode sinkNode;
 /* 105 */     if (!PolicyNodeType.SINK.equals(type)) {

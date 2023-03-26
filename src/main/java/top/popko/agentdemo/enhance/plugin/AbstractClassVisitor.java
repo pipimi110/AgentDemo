@@ -24,7 +24,7 @@ public abstract class AbstractClassVisitor extends ClassVisitor {
     }
 
     public void setTransformed() {
-        this.transformed = true;
+        this.transformed = true;//visitMethod()匹配到才设置
     }
 
     public boolean hasTransformed() {

@@ -18,7 +18,7 @@ public class SinkAdapter extends TaintAdapter {
         while(var5.hasNext()) {
             PolicyNode policyNode = (PolicyNode)var5.next();
             if (policyNode instanceof SinkNode) {
-//                this.enterScope(adapter);
+                this.enterScope(adapter);
 //                Label elseLabel = new Label();
 //                Label endLabel = new Label();
 //                this.isFirstScope(adapter);
@@ -33,14 +33,14 @@ public class SinkAdapter extends TaintAdapter {
 
 //    public void onMethodExit(MethodAdviceAdapter adapter, MethodVisitor mv, int opcode, MethodContext context, Set<PolicyNode> policyNodes) {
     public void onMethodExit(MethodAdviceAdapter adapter, MethodVisitor mv, int opcode, Set<PolicyNode> policyNodes) {
-//        Iterator var6 = policyNodes.iterator();
-//
-//        while(var6.hasNext()) {
-//            PolicyNode policyNode = (PolicyNode)var6.next();
-//            if (policyNode instanceof SinkNode) {
-//                this.leaveScope(adapter);
-//            }
-//        }
+        Iterator var6 = policyNodes.iterator();
+
+        while(var6.hasNext()) {
+            PolicyNode policyNode = (PolicyNode)var6.next();
+            if (policyNode instanceof SinkNode) {
+                this.leaveScope(adapter);
+            }
+        }
 
     }
 

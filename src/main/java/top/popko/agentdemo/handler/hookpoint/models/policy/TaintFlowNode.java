@@ -4,6 +4,7 @@ package top.popko.agentdemo.handler.hookpoint.models.policy;
 /*    */ 
 /*    */ public abstract class TaintFlowNode extends PolicyNode {
 /*    */   protected Set<TaintPosition> targets;
+            protected Set<TaintPosition> sources;
 /*    */   
 /*    */   public TaintFlowNode(Set<TaintPosition> targets, MethodMatcher methodMatcher) {
 /*  9 */     super(methodMatcher);
@@ -14,8 +15,15 @@ package top.popko.agentdemo.handler.hookpoint.models.policy;
 /* 14 */     return this.targets;
 /*    */   }
 /*    */   
-/*    */   public void setTargets(Set<TaintPosition> sources) {
-/* 18 */     this.targets = sources;
+/*    */   public void setTargets(Set<TaintPosition> targets) {
+/* 18 */     this.targets = targets;
+/*    */   }
+/*    */   public Set<TaintPosition> getSources() {
+/* 19 */     return this.sources;
+/*    */   }
+/*    */
+/*    */   public void setSources(Set<TaintPosition> sources) {
+/* 23 */     this.sources = sources;
 /*    */   }
 /*    */ }
 

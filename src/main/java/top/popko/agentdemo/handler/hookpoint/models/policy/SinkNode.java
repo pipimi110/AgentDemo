@@ -2,26 +2,17 @@ package top.popko.agentdemo.handler.hookpoint.models.policy;
 /*    */ 
 /*    */ import java.util.Set;
 /*    */ 
-/*    */ public class SinkNode extends PolicyNode {
-/*    */   private Set<TaintPosition> sources;
+/*    */ public class SinkNode extends TaintFlowNode {
 /*    */   private String vulType;
 /*    */   private String[] stackDenyList;
 /*    */   
 /*    */   public SinkNode(Set<TaintPosition> sources, MethodMatcher methodMatcher) {
-/* 11 */     super(methodMatcher);
+/* 11 */     super(null, methodMatcher);
 /* 12 */     this.sources = sources;
 /*    */   }
 /*    */   
 /*    */   public PolicyNodeType getType() {
 /* 16 */     return PolicyNodeType.SINK;
-/*    */   }
-/*    */   
-/*    */   public Set<TaintPosition> getSources() {
-/* 20 */     return this.sources;
-/*    */   }
-/*    */   
-/*    */   public void setSources(Set<TaintPosition> sources) {
-/* 24 */     this.sources = sources;
 /*    */   }
 /*    */   
 /*    */   public String getVulType() {

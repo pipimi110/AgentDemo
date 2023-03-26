@@ -1,5 +1,6 @@
 package top.popko.agentdemo.handler.hookpoint.models;
 
+import org.json.JSONObject;
 import top.popko.agentdemo.handler.hookpoint.models.policy.TaintPosition;
 
 import java.io.StringWriter;
@@ -9,20 +10,20 @@ import java.util.List;
 import java.util.Set;
 
 /**
- *  int[] sourcePositions/targetPositions :base/result表示为-1/-2 参数0-n)
+ * int[] sourcePositions/targetPositions :base/result表示为-1/-2 参数0-n)
  */
 public class MethodEvent {
-//    private static final int MAX_VALUE_LENGTH = 1024;
+    //    private static final int MAX_VALUE_LENGTH = 1024;
     private int invokeId;
     public boolean source;
     private Set<TaintPosition> sourcePositions;
-//    public int[] sourcePositions;
+    //    public int[] sourcePositions;
     private Set<TaintPosition> targetPositions;
-//    public int[] targetPositions;
+    //    public int[] targetPositions;
     public final String originClassName;
     private final String matchedClassName;
     public final String methodName;
-    public final  String signature;
+    public final String signature;
     public Object objectInstance;
     public String objectValue;
     public Object[] parameterInstances;
@@ -31,30 +32,11 @@ public class MethodEvent {
     public String returnValue;
     public final Set<Integer> sourceHashes = new HashSet();
     public final Set<Integer> targetHashes = new HashSet();
-//    public List<MethodEventTargetRange> targetRanges = new ArrayList();
-//    public List<MethodEventSourceType> sourceTypes;
-    private StackTraceElement
-        callStack;
+    //    public List<MethodEventTargetRange> targetRanges = new ArrayList();
+    public List<MethodEventSourceType> sourceTypes;
+    private StackTraceElement callStack;
 
-    public static class Parameter {
-        private final String index;
-        private final String value;
 
-        public Parameter(String index, String value) {
-            this.index = index;
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
-        //        public JSONObject toJson() {
-//            JSONObject json = new JSONObject();
-//            json.put("index", this.index);
-//            json.put("value", this.value);
-//            return json;
-//        }
-    }
 
     public MethodEvent(String originClassName, String matchedClassName, String methodName, String signature, Object objectInstance, Object[] parameterInstances, Object returnInstance) {
         //初始化//规则
@@ -67,6 +49,7 @@ public class MethodEvent {
         this.returnInstance = returnInstance;
         this.source = false;
     }
+
     public int getInvokeId() {
         return this.invokeId;
     }
@@ -77,6 +60,31 @@ public class MethodEvent {
 
     public boolean isSource() {
         return source;
+    }
+    public void setTaintPositions(Set<TaintPosition> sourcePositions, Set<TaintPosition> targetPositions) {
+        this.sourcePositions = sourcePositions;
+        this.targetPositions = targetPositions;
+    }
+    public Set<TaintPosition> getSourcePositions() {
+        return this.sourcePositions;
+    }
+    public Set<TaintPosition> getTargetPositions() {
+        return this.targetPositions;
+    }
+    public String getOriginClassName() {
+        return this.originClassName;
+    }
+
+    public String getMatchedClassName() {
+        return this.matchedClassName;
+    }
+
+    public String getMethodName() {
+        return this.methodName;
+    }
+
+    public String getSignature() {
+        return this.signature;
     }
 
     public void setObjectInstance(Object objectInstance) {
@@ -91,7 +99,7 @@ public class MethodEvent {
         this.returnInstance = returnInstance;
     }
 
-//    public void setObjectValue(Object obj, boolean hasTaint) {
+    //    public void setObjectValue(Object obj, boolean hasTaint) {
     public void setObjectValue(boolean hasTaint) {
         Object obj = this.objectInstance;
         if (obj != null) {
@@ -106,11 +114,12 @@ public class MethodEvent {
             this.parameterValues.add(parameter);
         }
     }
+
     public void setParameterValues(boolean hasTaint) {
         int index = 0;
         Object[] params = this.parameterInstances;
         if (params != null) {
-            for(Object param:params){
+            for (Object param : params) {
                 String indexString = "P" + String.valueOf(index + 1);
                 Parameter parameter = new Parameter(indexString, this.formatValue(param, hasTaint));
                 this.parameterValues.add(parameter);
@@ -119,7 +128,7 @@ public class MethodEvent {
         }
     }
 
-//    public void setReturnValue(Object ret, boolean hasTaint) {
+    //    public void setReturnValue(Object ret, boolean hasTaint) {
     public void setReturnValue(boolean hasTaint) {
         Object ret = this.returnInstance;
         if (ret != null) {
@@ -141,19 +150,19 @@ public class MethodEvent {
         } else {
             try {
                 if (value.getClass().isArray() && !value.getClass().getComponentType().isPrimitive()) {
-                    Object[] taints = (Object[])((Object[])value);
+                    Object[] taints = (Object[]) ((Object[]) value);
                     Object[] var4 = taints;
                     int var5 = taints.length;
 
-                    for(int var6 = 0; var6 < var5; ++var6) {
+                    for (int var6 = 0; var6 < var5; ++var6) {
                         Object taint = var4[var6];
                         if (taint != null) {
                             if (taint.getClass().isArray() && !taint.getClass().getComponentType().isPrimitive()) {
-                                Object[] subTaints = (Object[])((Object[])taint);
+                                Object[] subTaints = (Object[]) ((Object[]) taint);
                                 Object[] var9 = subTaints;
                                 int var10 = subTaints.length;
 
-                                for(int var11 = 0; var11 < var10; ++var11) {
+                                for (int var11 = 0; var11 < var10; ++var11) {
                                     Object subTaint = var9[var11];
                                     sb.append(subTaint.toString()).append(" ");
                                 }
@@ -163,7 +172,7 @@ public class MethodEvent {
                         }
                     }
                 } else if (value instanceof StringWriter) {
-                    sb.append(((StringWriter)value).getBuffer().toString());
+                    sb.append(((StringWriter) value).getBuffer().toString());
                 } else {
                     sb.append(value.toString());
                 }
@@ -175,8 +184,75 @@ public class MethodEvent {
         }
     }
 
-    public void setTaintPositions(Set<TaintPosition> sourcePositions, Set<TaintPosition> targetPositions) {
-        this.sourcePositions = sourcePositions;
-        this.targetPositions = targetPositions;
+    public Set<Integer> getSourceHashes() {
+        return this.sourceHashes;
+    }
+
+    public void addSourceHash(int hashcode) {
+        this.sourceHashes.add(hashcode);
+    }
+    public Set<Integer> getTargetHashes() {
+        return this.targetHashes;
+    }
+
+    public void addTargetHash(int hashCode) {
+        this.targetHashes.add(hashCode);
+    }
+
+    public void setCallStacks(StackTraceElement[] callStacks) {
+        this.setCallStack(callStacks[1]);//0是node,1是调用
+    }
+
+    public void setCallStack(StackTraceElement callStack) {
+        this.callStack = callStack;
+    }
+    public String getCallerClass() {
+        return this.callStack.getClassName();
+    }
+
+    public String getCallerMethod() {
+        return this.callStack.getMethodName();
+    }
+
+    public int getCallerLine() {
+        return this.callStack.getLineNumber();
+    }
+
+    public static class MethodEventSourceType {
+        private final Integer hash;
+        private final String type;
+
+        public MethodEventSourceType(Integer hash, String type) {
+            this.hash = hash;
+            this.type = type;
+        }
+
+        public JSONObject toJson() {
+            JSONObject json = new JSONObject();
+            json.put("hash", this.hash);
+            json.put("type", this.type);
+            return json;
+        }
+    }
+
+    public static class Parameter {
+        private final String index;
+        private final String value;
+
+        public Parameter(String index, String value) {
+            this.index = index;
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public JSONObject toJson() {
+            JSONObject json = new JSONObject();
+            json.put("index", this.index);
+            json.put("value", this.value);
+            return json;
+        }
     }
 }

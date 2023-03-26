@@ -1,1 +1,54 @@
-{"status": 201, "msg": "\u64cd\u4f5c\u6210\u529f", "data": [{"type": 4, "vul_type": "cmd-injection", "source": "P1", "target": "", "signature": "java.lang.Runtime.exec(java.lang.String)", "inherit": "false"}, {"type": 2, "vul_type": "javax.servlet.ServletRequest", "source": "O", "target": "R", "signature": "javax.servlet.ServletRequest.getInputStream()", "inherit": "true"}, {"type": 2, "vul_type": "test source", "source": "P1", "target": "R", "signature": "com.example.demo.Source.getSource(java.lang.String)", "inherit": "false"}, {"type": 4, "vul_type": "test sink", "source": "P1", "target": "", "signature": "com.example.demo.VulDemo.soutplus(java.lang.String)", "inherit": "false"}]}
+{
+    "status": 201,
+    "msg": "操作成功",
+    "data": [
+        {
+            "type": 4,
+            "vul_type": "cmd-injection",
+            "source": "P1",
+            "target": "",
+            "signature": "java.lang.Runtime.exec(java.lang.String)",
+            "inherit": "false"
+        },
+        {
+            "type": 2,
+            "vul_type": "javax.servlet.ServletRequest",
+            "source": "O",
+            "target": "R",
+            "signature": "javax.servlet.ServletRequest.getInputStream()",
+            "inherit": "true"
+        },
+        {
+            "type": 2,
+            "vul_type": "test source",
+            "source": "P1",
+            "target": "R",
+            "signature": "com.example.demo.Source.getSource(java.lang.String)",
+            "inherit": "false"
+        },
+        {
+            "type": 4,
+            "vul_type": "test sink",
+            "source": "P1",
+            "target": "",
+            "signature": "com.example.demo.VulDemo.soutplus(java.lang.String)",
+            "inherit": "false"
+        },
+        {
+            "type": 1,
+            "vul_type": "String",
+            "source": "O|P1",
+            "target": "R",
+            "signature": "java.lang.String.concat(java.lang.String)",
+            "inherit": "false"
+        },
+        {
+            "type": 1,
+            "vul_type": "String",
+            "source": "P1",
+            "target": "R",
+            "signature": "com.example.demo.VulDemo.propagator(java.lang.String)",
+            "inherit": "false"
+        }
+    ]
+}

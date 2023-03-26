@@ -9,12 +9,11 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import top.popko.agentdemo.config.ConfigMatcher;
 import top.popko.agentdemo.enhance.ClassContext;
+import top.popko.agentdemo.enhance.IastClassDiagram;
 import top.popko.agentdemo.enhance.plugin.AbstractClassVisitor;
 import top.popko.agentdemo.enhance.plugin.PluginManager;
 import top.popko.agentdemo.enhance.plugin.core.CoreClassVisitor;
 import top.popko.agentdemo.enhance.plugin.core.DispatchClassPlugin;
-import top.popko.agentdemo.handler.hookpoint.SpyDispatcherHandler;
-import top.popko.agentdemo.handler.hookpoint.SpyDispatcherImpl;
 import top.popko.agentdemo.handler.hookpoint.models.policy.Policy;
 import top.popko.agentdemo.handler.hookpoint.models.policy.PolicyManager;
 
@@ -24,18 +23,13 @@ import java.lang.instrument.Instrumentation;
 import java.security.ProtectionDomain;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
 
 public class DefineTransformer implements ClassFileTransformer {
     private Config config;
-    private ConfigMatcher configMatcher;
-    private static PolicyManager policyManager = PolicyManager.getInstance();
-    private static PluginManager pluginManager = PluginManager.getInstance();
+    private static IastClassDiagram classDiagram = IastClassDiagram.getInstance();
 
     DefineTransformer(Instrumentation inst) {
-        this.configMatcher = ConfigMatcher.getInstance();
-        this.configMatcher.setInst(inst);
-        SpyDispatcherHandler.setDispatcher(new SpyDispatcherImpl());
-        policyManager.loadPolicy(System.getProperty("policyfile"));
     }
 
     DefineTransformer(Instrumentation inst, Config javassistConfig) {
@@ -63,7 +57,7 @@ public class DefineTransformer implements ClassFileTransformer {
         if (internalClassName == null || internalClassName.startsWith("top/popko/agentdemo")) {
             return null;
         }
-        if (null == classBeingRedefined && !this.configMatcher.canHook(internalClassName)) {
+        if (null == classBeingRedefined && !ConfigMatcher.getInstance().canHook(internalClassName)) {
             return null;
         }
         if (!tmpClassFilter(internalClassName)) {
@@ -78,20 +72,21 @@ public class DefineTransformer implements ClassFileTransformer {
         ClassReader classReader = new ClassReader(classfileBuffer);
         ClassContext classContext = new ClassContext(classReader, loader);
         String className = classContext.getClassName();
-///* 142 */         Set<String> ancestors = this.classDiagram.getDiagram(className);
-///* 143 */         if (ancestors == null) {
-///* 144 */           this.classDiagram.setLoader(loader);
-///* 145 */           this.classDiagram.saveAncestors(className, classContext.getSuperClassName(), classContext.getInterfaces());
-///* 146 */           ancestors = this.classDiagram.getAncestors(className, classContext.getSuperClassName(), classContext
-///* 147 */               .getInterfaces());
-///*     */         }
-///* 149 */         classContext.setAncestors(ancestors);
+        Set<String> ancestors = this.classDiagram.getDiagram(className);
+        if (ancestors == null) {
+            this.classDiagram.setLoader(loader);
+            this.classDiagram.saveAncestors(className, classContext.getSuperClassName(), classContext.getInterfaces());
+            ancestors = this.classDiagram.getAncestors(className, classContext.getSuperClassName(), classContext.getInterfaces());
+        }
+        classContext.setAncestors(ancestors);
         ClassWriter classWriter = new ClassWriter(classReader, ClassWriter.COMPUTE_MAXS);
-        AbstractClassVisitor classVisitor = (AbstractClassVisitor) pluginManager.matchNewClassVisitor(classWriter, classContext, policyManager.getPolicy());
+        ClassVisitor classVisitor = PluginManager.getInstance().matchNewClassVisitor(classWriter, classContext, PolicyManager.getInstance().getPolicy());
         classReader.accept(classVisitor, ClassReader.EXPAND_FRAMES);//触发IASTClassVisitor.visitMethod
         //accept()方法满足规则->setTransformed()
-        if (classVisitor.hasTransformed()) {
-            classfileBuffer = classWriter.toByteArray();
+        if (classVisitor instanceof AbstractClassVisitor) {
+            if (((AbstractClassVisitor) classVisitor).hasTransformed()) {
+                classfileBuffer = classWriter.toByteArray();
+            }
         }
         return classfileBuffer;
     }

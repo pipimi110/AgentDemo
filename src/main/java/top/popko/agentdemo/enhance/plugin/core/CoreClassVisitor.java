@@ -5,10 +5,7 @@ import org.objectweb.asm.MethodVisitor;
 import top.popko.agentdemo.enhance.ClassContext;
 import top.popko.agentdemo.enhance.MethodContext;
 import top.popko.agentdemo.enhance.plugin.AbstractClassVisitor;
-import top.popko.agentdemo.enhance.plugin.core.adapter.TaintAdapter;
-import top.popko.agentdemo.enhance.plugin.core.adapter.MethodAdviceAdapter;
-import top.popko.agentdemo.enhance.plugin.core.adapter.SinkAdapter;
-import top.popko.agentdemo.enhance.plugin.core.adapter.SourceAdapter;
+import top.popko.agentdemo.enhance.plugin.core.adapter.*;
 import top.popko.agentdemo.handler.hookpoint.models.policy.Policy;
 import top.popko.agentdemo.handler.hookpoint.models.policy.PolicyNode;
 import top.popko.agentdemo.util.AsmUtils;
@@ -23,8 +20,7 @@ public class CoreClassVisitor extends AbstractClassVisitor {
     private int classVersion;
 
     //                private final MethodAdapter[] methodAdapters = new MethodAdapter[]{new SourceAdapter(), new PropagatorAdapter(), new SinkAdapter()};
-    private final TaintAdapter[] taintAdapters = new TaintAdapter[]{new SourceAdapter(), new SinkAdapter()};
-//        private final MethodAdapter[] taintAdapters = new MethodAdapter[]{new SourceAdapter()};
+    private final TaintAdapter[] taintAdapters = new TaintAdapter[]{new SourceAdapter(), new PropagatorAdapter(), new SinkAdapter()};
 
     CoreClassVisitor(ClassVisitor classVisitor, ClassContext classContext, Policy policy) {
         super(classVisitor, classContext, policy);

@@ -3,7 +3,6 @@ package top.popko.agentdemo.enhance.asm;
 import org.objectweb.asm.Type;
 import top.popko.agentdemo.handler.hookpoint.SpyDispatcher;
 import top.popko.agentdemo.handler.hookpoint.SpyDispatcherHandler;
-import top.popko.agentdemo.handler.hookpoint.SpyDispatcherImpl;
 
 
 public interface AsmTypes {

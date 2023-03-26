@@ -16,7 +16,7 @@ public class ClassContext {
     public ClassContext(ClassReader classReader, ClassLoader loader) {
         this.internalClassName = classReader.getClassName();
         this.className = this.internalClassName.replace("/", ".");
-        this.superClassName = classReader.getSuperName();
+        this.superClassName = classReader.getSuperName();//todo: 统一replace
         this.interfaces = classReader.getInterfaces();
         this.modifier = classReader.getAccess();
         this.isBootstrapClassLoader = loader == null;

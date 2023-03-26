@@ -1,7 +1,8 @@
 package top.popko.agentdemo.util;
 
+import top.popko.agentdemo.EngineManager;
 import top.popko.agentdemo.handler.hookpoint.models.MethodEvent;
-import top.popko.agentdemo.handler.hookpoint.models.track.TaintTrack;
+
 
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
@@ -23,7 +24,7 @@ public class TaintPoolUtils {
         } else {
             boolean isContains = contains(obj);
             if (isContains) {
-//                event.addSourceHash(System.identityHashCode(obj));
+                event.addSourceHash(System.identityHashCode(obj));
                 return true;
             } else {
                 int var5;
@@ -58,7 +59,7 @@ public class TaintPoolUtils {
     }
 
     private static boolean contains(Object obj) {
-        return TaintTrack.TAINT_HASH_CODES.contains(System.identityHashCode(obj));
+        return EngineManager.TAINT_HASH_CODES.contains(System.identityHashCode(obj));
     }
 
     public static boolean isNotEmpty(Object obj) {

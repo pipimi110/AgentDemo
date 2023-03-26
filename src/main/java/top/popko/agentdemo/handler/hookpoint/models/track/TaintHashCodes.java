@@ -39,12 +39,12 @@ public class TaintHashCodes extends ThreadLocal<HashSet<Integer>> {
                     String tempObj = tempObjs[var7];
                     subHashCode = System.identityHashCode(tempObj);
                     this.add(subHashCode);
-//                        event.addTargetHash(subHashCode);
+                    event.addTargetHash(subHashCode);
                 }
             } else if (obj instanceof Map) {
                 int hashCode = System.identityHashCode(obj);
                 this.add(hashCode);
-//                    event.addTargetHash(hashCode);
+                    event.addTargetHash(hashCode);
             } else if (obj.getClass().isArray() && !obj.getClass().getComponentType().isPrimitive()) {
                 Object[] tempObjs = (Object[]) ((Object[]) obj);
                 if (tempObjs.length != 0) {
@@ -56,7 +56,7 @@ public class TaintHashCodes extends ThreadLocal<HashSet<Integer>> {
             } else {
                 subHashCode = System.identityHashCode(obj);
                 this.add(subHashCode);
-//                    event.addTargetHash(subHashCode);
+                    event.addTargetHash(subHashCode);
             }
         } catch (Exception var9) {
 //                DongTaiLog.error("add object to taint pool failed", var9);

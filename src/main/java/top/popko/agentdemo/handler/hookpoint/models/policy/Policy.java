@@ -5,7 +5,7 @@ package top.popko.agentdemo.handler.hookpoint.models.policy;
 /*    */
 /*    */ public class Policy {
 /*  6 */   private final List<SourceNode> sources = new ArrayList<>();
-///*  7 */   private final List<PropagatorNode> propagators = new ArrayList<>();
+/*  7 */   private final List<PropagatorNode> propagators = new ArrayList<>();
 /*  8 */   private final List<SinkNode> sinks = new ArrayList<>();
 /*  9 */   private final Map<String, PolicyNode> policyNodesMap = new HashMap<>();
 /* 10 */   private final Set<String> classHooks = new HashSet<>();
@@ -20,14 +20,14 @@ package top.popko.agentdemo.handler.hookpoint.models.policy;
 /* 19 */     addPolicyNode(source);
 /*    */   }
 /*    */   
-///*    */   public List<PropagatorNode> getPropagators() {
-///* 23 */     return this.propagators;
-///*    */   }
-///*    */
-///*    */   public void addPropagator(PropagatorNode propagator) {
-///* 27 */     this.propagators.add(propagator);
-///* 28 */     addPolicyNode(propagator);
-///*    */   }
+/*    */   public List<PropagatorNode> getPropagators() {
+/* 23 */     return this.propagators;
+/*    */   }
+/*    */
+/*    */   public void addPropagator(PropagatorNode propagator) {
+/* 27 */     this.propagators.add(propagator);
+/* 28 */     addPolicyNode(propagator);
+/*    */   }
 /*    */   
 /*    */   public List<SinkNode> getSinks() {
 /* 32 */     return this.sinks;
@@ -68,11 +68,11 @@ package top.popko.agentdemo.handler.hookpoint.models.policy;
 /* 67 */     if (this.classHooks.contains(className)) {
 /* 68 */       return className;
 /*    */     }
-/* 70 */     for (String ancestor : ancestors) {
-/* 71 */       if (this.ancestorClassHooks.contains(ancestor)) {
-/* 72 */         return ancestor;
-/*    */       }
-/*    */     } 
+///* 70 */     for (String ancestor : ancestors) {
+///* 71 */       if (this.ancestorClassHooks.contains(ancestor)) {
+///* 72 */         return ancestor;
+///*    */       }
+///*    */     }// todo: 匹配父类继承的方法
 /* 75 */     return null;
 /*    */   }
 /*    */   
