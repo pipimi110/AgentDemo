@@ -34,6 +34,14 @@ public class StringUtils {
     public static boolean isEmpty(String str) {
         return str == null || str.length() == 0;
     }
+    public static boolean endsWithAny(String str, String[] DISABLE_EXT) {
+        for(String ext : DISABLE_EXT){
+            if(str.endsWith(ext)){
+                return true;
+            }
+        }
+        return false;
+    }
 
     public static String normalize(String str, int maxLength) {
         int max = Math.max(maxLength, 5);

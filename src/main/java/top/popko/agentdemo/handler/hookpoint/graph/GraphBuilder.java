@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import top.popko.agentdemo.EngineManager;
 import top.popko.agentdemo.handler.hookpoint.controller.impl.HttpImpl;
 import top.popko.agentdemo.handler.hookpoint.models.MethodEvent;
+import top.popko.agentdemo.util.HttpClientUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,6 +29,8 @@ public class GraphBuilder {
                 String report = convertToReport(nodeList, request, response);
                 System.out.println("[+]report:");
                 System.out.println(report);
+                HttpClientUtils.sendPOST(System.getProperty("serverhost")+"/iast/add_vulns",report);
+                // 发给服务器
             }
 //            ThreadPools.sendPriorityReport("/api/v1/report/upload", report);
         } catch (Throwable var7) {

@@ -1,6 +1,7 @@
 package top.popko.agentdemo.handler.hookpoint.controller.impl;
 
 import top.popko.agentdemo.EngineManager;
+import top.popko.agentdemo.config.ConfigMatcher;
 import top.popko.agentdemo.handler.hookpoint.controller.wrapper.ServletRequestWrapper;
 import top.popko.agentdemo.handler.hookpoint.controller.wrapper.ServletResponseWrapper;
 import top.popko.agentdemo.handler.hookpoint.models.MethodEvent;
@@ -168,6 +169,7 @@ public class HttpImpl {
     }
 
     public static void solveHttp(MethodEvent event) {
+        System.out.println("[+]solveHttp");
         //org.apache.catalina.core.ApplicationFilterChain.doFilter(javax.servlet.ServletRequest,javax.servlet.ServletResponse)
         try {
             REQUEST_META.set(getRequestMeta(event.parameterInstances[0]));
@@ -199,12 +201,14 @@ public class HttpImpl {
 //        }
 
         //后缀/黑名单过滤
-//        if (!ConfigMatcher.getInstance().disableExtension((String)((Map)REQUEST_META.get()).get("requestURI"))) {
+        System.out.println("requestURI:");
+        System.out.println(REQUEST_META.get().get("requestURI"));// /vuldemo /favicon.ico /error
+        if (!ConfigMatcher.getInstance().disableExtension((String)((Map)REQUEST_META.get()).get("requestURI"))) {
 //            if (!ConfigMatcher.getInstance().getBlackUrl((Map)REQUEST_META.get())) {
                 EngineManager.enterHttpEntry((Map)REQUEST_META.get());
 //                DongTaiLog.debug("HTTP Request:{} {} from: {}", new Object[]{((Map)REQUEST_META.get()).get("method"), ((Map)REQUEST_META.get()).get("requestURI"), event.signature});
 //            }
-//        }
+        }
     }
 
 //    public static IastClassLoader getClassLoader() {

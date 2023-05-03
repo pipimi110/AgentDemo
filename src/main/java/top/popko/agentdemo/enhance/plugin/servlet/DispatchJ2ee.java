@@ -32,9 +32,11 @@ public class DispatchJ2ee implements DispatchPlugin {
     }
 
     private boolean isServletDispatch(String className, Set<String> diagram) {
-        boolean isServlet = this.FACES_SERVLET.equals(className);
-        isServlet = isServlet || this.HTTP_SERVLET.equals(className);//abstract
-        return isServlet || diagram.contains(this.FILTER) || diagram.contains(this.FILTER_CHAIN);//interface
+        //todo: 检测注释idagram是否可用
+//        boolean isServlet = this.FACES_SERVLET.equals(className);
+//        isServlet = isServlet || this.HTTP_SERVLET.equals(className);//abstract
+//        return isServlet || diagram.contains(this.FILTER) || diagram.contains(this.FILTER_CHAIN);//interface
+        return this.HTTP_SERVLET.equals(className);
     }
 
     private boolean isJakartaServlet(String className) {

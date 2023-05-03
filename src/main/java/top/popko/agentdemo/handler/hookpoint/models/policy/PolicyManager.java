@@ -45,13 +45,13 @@ import top.popko.agentdemo.util.StringUtils;
 /* 35 */     this.policy = policy;
 /*    */   }
 /*    */
-/*    */   public void loadPolicy(String policyPath) {
+/*    */   public void loadPolicy(String configPath) {
 /*    */     try {
 /*    */       JSONArray policyConfig;
-/* 41 */       if (StringUtils.isEmpty(policyPath)) {
+/* 41 */       if (StringUtils.isEmpty(configPath)) {
 /* 42 */         policyConfig = PolicyBuilder.fetchFromServer();
 /*    */       } else {
-/* 44 */         policyConfig = PolicyBuilder.fetchFromFile(policyPath);
+/* 44 */         policyConfig = PolicyBuilder.fetchFromFile(configPath+"policy.json");
 /*    */       }
 /* 46 */       this.policy = PolicyBuilder.build(policyConfig);
 /* 47 */     } catch (Throwable e) {

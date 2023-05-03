@@ -124,8 +124,8 @@ public abstract class AbstractSolve {
 
         while (var7.hasNext()) {
             TaintPosition tp = (TaintPosition) var7.next();
-             if(setSourceValue(event, tp)){
-                 hasTaint = true;//只要有一个是污点即可
+             if(setSourceValue(event, tp)){//规则中source是多个,target只能一个
+                 hasTaint = true;//只要source有一个是污点即可
              }
         }
 

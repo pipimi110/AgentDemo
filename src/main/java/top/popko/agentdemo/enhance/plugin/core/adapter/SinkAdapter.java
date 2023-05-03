@@ -1,6 +1,9 @@
 package top.popko.agentdemo.enhance.plugin.core.adapter;
 
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
+import top.popko.agentdemo.enhance.plugin.AbstractAdviceAdapter;
 import top.popko.agentdemo.handler.hookpoint.models.policy.PolicyNode;
 import top.popko.agentdemo.handler.hookpoint.models.policy.SinkNode;
 
@@ -12,7 +15,7 @@ public class SinkAdapter extends TaintAdapter {
     }
 
 //    public void onMethodEnter(MethodAdviceAdapter adapter, MethodVisitor mv, MethodContext context, Set<PolicyNode> policyNodes) {
-    public void onMethodEnter(MethodAdviceAdapter adapter, MethodVisitor mv, Set<PolicyNode> policyNodes) {
+    public void onMethodEnter(AbstractAdviceAdapter adapter, MethodVisitor mv, Set<PolicyNode> policyNodes) {
         Iterator var5 = policyNodes.iterator();
 
         while(var5.hasNext()) {
@@ -22,7 +25,7 @@ public class SinkAdapter extends TaintAdapter {
 //                Label elseLabel = new Label();
 //                Label endLabel = new Label();
 //                this.isFirstScope(adapter);
-//                mv.visitJumpInsn(153, elseLabel);
+//                adapter.visitJumpInsn(Opcodes.IFEQ, elseLabel);
                 adapter.trackMethod(-1, policyNode, false);
 //                adapter.mark(elseLabel);
 //                adapter.mark(endLabel);
@@ -32,7 +35,7 @@ public class SinkAdapter extends TaintAdapter {
     }
 
 //    public void onMethodExit(MethodAdviceAdapter adapter, MethodVisitor mv, int opcode, MethodContext context, Set<PolicyNode> policyNodes) {
-    public void onMethodExit(MethodAdviceAdapter adapter, MethodVisitor mv, int opcode, Set<PolicyNode> policyNodes) {
+    public void onMethodExit(AbstractAdviceAdapter adapter, MethodVisitor mv, int opcode, Set<PolicyNode> policyNodes) {
         Iterator var6 = policyNodes.iterator();
 
         while(var6.hasNext()) {
@@ -44,17 +47,17 @@ public class SinkAdapter extends TaintAdapter {
 
     }
 
-    private void enterScope(MethodAdviceAdapter adapter) {
+    private void enterScope(AbstractAdviceAdapter adapter) {
         adapter.invokeStatic(ASM_TYPE_SPY_HANDLER, SPY_HANDLER$getDispatcher);
         adapter.invokeInterface(ASM_TYPE_SPY_DISPATCHER, SPY$enterSink);
     }
 
-    private void leaveScope(MethodAdviceAdapter adapter) {
+    private void leaveScope(AbstractAdviceAdapter adapter) {
         adapter.invokeStatic(ASM_TYPE_SPY_HANDLER, SPY_HANDLER$getDispatcher);
         adapter.invokeInterface(ASM_TYPE_SPY_DISPATCHER, SPY$leaveSink);
     }
 
-    private void isFirstScope(MethodAdviceAdapter adapter) {
+    private void isFirstScope(AbstractAdviceAdapter adapter) {
         adapter.invokeStatic(ASM_TYPE_SPY_HANDLER, SPY_HANDLER$getDispatcher);
         adapter.invokeInterface(ASM_TYPE_SPY_DISPATCHER, SPY$isFirstLevelSink);
     }

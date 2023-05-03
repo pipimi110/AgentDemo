@@ -17,7 +17,6 @@ public class MethodEvent {
     private int invokeId;
     public boolean source;
     private Set<TaintPosition> sourcePositions;
-    //    public int[] sourcePositions;
     private Set<TaintPosition> targetPositions;
     //    public int[] targetPositions;
     public final String originClassName;

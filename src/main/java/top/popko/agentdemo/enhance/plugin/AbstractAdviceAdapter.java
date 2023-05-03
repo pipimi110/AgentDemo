@@ -70,7 +70,7 @@ public abstract class AbstractAdviceAdapter extends AdviceAdapter implements Asm
     protected abstract void after(int var1);
 
     protected void loadThisOrPushNullIfIsStatic() {
-        if (Modifier.isStatic(this.access)) {
+        if (Modifier.isStatic(this.access)||"<init>".equals(this.name)) {
             this.push((Type)null);
         } else {
             this.loadThis();

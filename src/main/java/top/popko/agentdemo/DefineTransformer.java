@@ -60,9 +60,9 @@ public class DefineTransformer implements ClassFileTransformer {
         if (null == classBeingRedefined && !ConfigMatcher.getInstance().canHook(internalClassName)) {
             return null;
         }
-        if (!tmpClassFilter(internalClassName)) {
-            return null;
-        }
+//        if (!tmpClassFilter(internalClassName)) {//todo: 注释后java.lang.String.concat 重载报错
+//            return null;
+//        }
         String className = internalClassName.replace("/", ".");
         return adviceAdapterTest1(loader, classfileBuffer);
     }
@@ -83,10 +83,11 @@ public class DefineTransformer implements ClassFileTransformer {
         ClassVisitor classVisitor = PluginManager.getInstance().matchNewClassVisitor(classWriter, classContext, PolicyManager.getInstance().getPolicy());
         classReader.accept(classVisitor, ClassReader.EXPAND_FRAMES);//触发IASTClassVisitor.visitMethod
         //accept()方法满足规则->setTransformed()
-        if (classVisitor instanceof AbstractClassVisitor) {
-            if (((AbstractClassVisitor) classVisitor).hasTransformed()) {
-                classfileBuffer = classWriter.toByteArray();
-            }
+        if (classVisitor instanceof AbstractClassVisitor && ((AbstractClassVisitor) classVisitor).hasTransformed()) {
+            classfileBuffer = classWriter.toByteArray();
+//            System.out.println(String.format("[TEST] 重新加载成功 %s", className));
+        } else {
+//            System.err.println(String.format("[TEST] 加载失败 %s: hasTransformed", className));
         }
         return classfileBuffer;
     }
@@ -112,20 +113,25 @@ public class DefineTransformer implements ClassFileTransformer {
 
     public void retransform(Instrumentation inst) {
         Class[] classes = inst.getAllLoadedClasses();
+        Policy policy = PolicyManager.getInstance().getPolicy();
         for (Class aClass : classes) {
+//            System.out.println(aClass.getClassLoader());
+//            System.out.println(String.format("[TEST] 开始重新加载 %s", aClass.getName()));
             if (inst.isModifiableClass(aClass)) {
-//                System.out.println(String.format("[TEST] 重新加载"));
                 try {
-                    Policy policy = PolicyManager.getInstance().getPolicy();
                     if (PolicyManager.isHookClass(aClass.getName()) || (policy != null && policy.isMatchClass(aClass.getName()))) {
                         //jdk8有的类重载retransformClasses()->retransformClasses0()
                         //会报错failed to write core dump.
                         //用规则防止进入
                         inst.retransformClasses(aClass);
+                    } else {
+//                        System.err.println(String.format("[TEST] 加载失败 %s: isMatchClass", aClass.getName()));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            } else {
+//                System.err.println(String.format("[TEST] 加载失败 %s: isModifiableClass", aClass.getName()));
             }
         }
     }

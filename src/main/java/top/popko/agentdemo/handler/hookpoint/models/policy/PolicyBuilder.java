@@ -5,6 +5,7 @@ package top.popko.agentdemo.handler.hookpoint.models.policy;
 /*     */ import org.json.JSONArray;
 /*     */ import org.json.JSONException;
 /*     */ import org.json.JSONObject;
+import top.popko.agentdemo.util.HttpClientUtils;
 import top.popko.agentdemo.util.StringUtils;
 ///*     */ import io.dongtai.log.DongTaiLog;
 /*     */ import java.io.File;
@@ -22,14 +23,15 @@ import top.popko.agentdemo.util.StringUtils;
 /*     */   private static final String KEY_TARGET = "target";
 /*     */   
 /*     */   public static JSONArray fetchFromServer() throws Exception {
-///*     */     try {
-///*  27 */       StringBuilder resp = HttpClientUtils.sendGet("/api/v1/profilesv2", null);
-///*  28 */       JSONObject respObj = new JSONObject(resp.toString());
-///*  29 */       return respObj.getJSONArray("data");
-///*  30 */     } catch (JSONException e) {
-///*  31 */       throw new PolicyException("policy config from server is invalid", e);
-///*     */     }
-/*     */   throw new Exception("test not allow fetchFromServer()");}
+/*     */     try {
+/*  27 */       StringBuilder resp = HttpClientUtils.sendGet(System.getProperty("serverhost")+"/iast/show_hook_rules");
+/*  28 */       JSONObject respObj = new JSONObject(resp.toString());
+/*  29 */       return respObj.getJSONArray("data");
+/*  30 */     } catch (JSONException e) {
+/*  31 */       throw new PolicyException("policy config from server is invalid", e);
+/*     */     }
+///*     */   throw new Exception("test not allow fetchFromServer()");
+}
 /*     */   private static final String KEY_SIGNATURE = "signature"; private static final String KEY_INHERIT = "inherit"; private static final String KEY_VUL_TYPE = "vul_type"; private static final String KEY_COMMAND = "command";
 /*     */   public static JSONArray fetchFromFile(String path) throws PolicyException {
 /*     */     try {

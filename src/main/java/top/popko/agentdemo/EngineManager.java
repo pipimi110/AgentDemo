@@ -3,11 +3,15 @@ package top.popko.agentdemo;
 import top.popko.agentdemo.handler.hookpoint.models.track.RequestContext;
 import top.popko.agentdemo.handler.hookpoint.models.track.TaintHashCodes;
 import top.popko.agentdemo.handler.hookpoint.models.track.TaintMap;
-
+import top.popko.agentdemo.config.ConfigMatcher;
+import top.popko.agentdemo.handler.hookpoint.NopSpy;
+import top.popko.agentdemo.handler.hookpoint.SpyDispatcherHandler;
+import top.popko.agentdemo.handler.hookpoint.SpyDispatcherImpl;
+import top.popko.agentdemo.handler.hookpoint.models.policy.PolicyManager;
+import java.lang.instrument.Instrumentation;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class EngineManager {
     public static final TaintHashCodes TAINT_HASH_CODES = new TaintHashCodes();
@@ -110,5 +114,29 @@ public class EngineManager {
         TAINT_HASH_CODES.set(new HashSet());
 //        TAINT_RANGES_POOL.set(new HashMap());
 //        ScopeManager.SCOPE_TRACKER.getHttpEntryScope().enter();
+    }
+
+    public static void before(String agentArgs, Instrumentation inst) {
+        PolicyManager.getInstance().loadPolicy(System.getProperty("configpath"));
+        ConfigMatcher.getInstance().setInst(inst);
+        EngineManager.getInstance(1);
+//        EngineManager.REQUEST_CONTEXT.set(requestMeta);
+//        vuldemo 非http需要初始化
+        EngineManager.TRACK_MAP.set(new HashMap(1024));
+        EngineManager.TAINT_HASH_CODES.set(new HashSet());
+        SpyDispatcherHandler.setDispatcher(new NopSpy());
+
+    }
+    public static void after(String agentArgs, Instrumentation inst) {
+        SpyDispatcherHandler.setDispatcher(new SpyDispatcherImpl());
+    }
+    public static void insertHook(String agentArgs, Instrumentation inst) {
+        System.out.println("agentArgs : " + agentArgs);
+        before(agentArgs, inst);
+//        after(agentArgs, inst);a
+        DefineTransformer defineTransformer = new DefineTransformer(inst);
+        inst.addTransformer(defineTransformer, true);
+        defineTransformer.retransform(inst);//添加DefineTransformer后retransform重新加载类会经过DefineTransformer
+        after(agentArgs, inst);
     }
 }

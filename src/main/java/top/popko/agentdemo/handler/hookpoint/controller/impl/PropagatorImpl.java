@@ -22,16 +22,17 @@ public class PropagatorImpl extends AbstractSolve {
     }
 
     public void solvePropagator(MethodEvent event, PropagatorNode propagatorNode, AtomicInteger invokeIdSequencer) {
+        System.out.println("[+]solvePropagator");
         if (!EngineManager.TAINT_HASH_CODES.isEmpty()) {
             Set<TaintPosition> sources = propagatorNode.getSources();
             Set<TaintPosition> targets = propagatorNode.getTargets();
             if (!sources.isEmpty() && !targets.isEmpty()) {
-                if (setIfSourcesInTaintPool(event, propagatorNode)) {
+                if (setIfSourcesInTaintPool(event, propagatorNode)) {//PropagatorImpl需要判断sources是否在污点池中
                     TaintPosition tp;
                     Iterator var5 = propagatorNode.getTargets().iterator();//targets遍历
                     while (var5.hasNext()) {
                         tp = (TaintPosition) var5.next();
-                        setTargetValue(event, tp);
+                        setTargetValue(event, tp);//setTargetValue->addTaintHash添加hash入池
                     }
 //                boolean valid = setTarget(propagatorNode, event);
 //                boolean valid = setTargetValue(event, tp);
@@ -43,7 +44,7 @@ public class PropagatorImpl extends AbstractSolve {
 //        if (!event.getSourceHashes().equals(event.getTargetHashes()) || sources.size() != 1 || targets.size() != 1 || !TaintPosition.hasObject(sources) || !TaintPosition.hasObject(targets) && !TaintPosition.hasReturn(targets)) {
                     event.setCallStacks(StackUtils.createCallStack(4));
                     event.setTaintPositions(propagatorNode.getSources(), propagatorNode.getTargets());
-                    addTrackEvent(event);
+                    addTrackEvent(event);//addTrackEvent->TRACK_MAP.addTrackMethod保存事件到map
 //        }
 //                }
                 }

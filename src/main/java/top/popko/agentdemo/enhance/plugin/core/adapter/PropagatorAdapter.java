@@ -2,6 +2,7 @@ package top.popko.agentdemo.enhance.plugin.core.adapter;
 
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
+import top.popko.agentdemo.enhance.plugin.AbstractAdviceAdapter;
 import top.popko.agentdemo.handler.hookpoint.models.policy.PolicyNode;
 import top.popko.agentdemo.handler.hookpoint.models.policy.PropagatorNode;
 
@@ -12,7 +13,7 @@ public class PropagatorAdapter extends TaintAdapter {
     public PropagatorAdapter() {
     }
 
-    public void onMethodEnter(MethodAdviceAdapter adapter, MethodVisitor mv, Set<PolicyNode> policyNodes) {
+    public void onMethodEnter(AbstractAdviceAdapter adapter, MethodVisitor mv, Set<PolicyNode> policyNodes) {
         Iterator var5 = policyNodes.iterator();
 
         while(var5.hasNext()) {
@@ -27,7 +28,7 @@ public class PropagatorAdapter extends TaintAdapter {
     }
 
 //    public void onMethodExit(MethodAdviceAdapter adapter, MethodVisitor mv, int opcode, MethodContext context, Set<PolicyNode> policyNodes) {
-    public void onMethodExit(MethodAdviceAdapter adapter, MethodVisitor mv, int opcode, Set<PolicyNode> policyNodes) {
+    public void onMethodExit(AbstractAdviceAdapter adapter, MethodVisitor mv, int opcode, Set<PolicyNode> policyNodes) {
         Iterator var6 = policyNodes.iterator();
 
         while(var6.hasNext()) {
@@ -48,7 +49,7 @@ public class PropagatorAdapter extends TaintAdapter {
 
     }
 
-    private void enterScope(MethodAdviceAdapter adapter, String signature) {
+    private void enterScope(AbstractAdviceAdapter adapter, String signature) {
         adapter.invokeStatic(ASM_TYPE_SPY_HANDLER, SPY_HANDLER$getDispatcher);
 //        if (PropagatorImpl.isSkipScope(signature)) {
 //            adapter.push(true);
@@ -59,7 +60,7 @@ public class PropagatorAdapter extends TaintAdapter {
         adapter.invokeInterface(ASM_TYPE_SPY_DISPATCHER, SPY$enterPropagator);
     }
 
-    private void leaveScope(MethodAdviceAdapter adapter, String signature) {
+    private void leaveScope(AbstractAdviceAdapter adapter, String signature) {
         adapter.invokeStatic(ASM_TYPE_SPY_HANDLER, SPY_HANDLER$getDispatcher);
 //        if (PropagatorImpl.isSkipScope(signature)) {
 //            adapter.push(true);
@@ -70,7 +71,7 @@ public class PropagatorAdapter extends TaintAdapter {
         adapter.invokeInterface(ASM_TYPE_SPY_DISPATCHER, SPY$leavePropagator);
     }
 
-    private void isFirstScope(MethodAdviceAdapter adapter) {
+    private void isFirstScope(AbstractAdviceAdapter adapter) {
         adapter.invokeStatic(ASM_TYPE_SPY_HANDLER, SPY_HANDLER$getDispatcher);
         adapter.invokeInterface(ASM_TYPE_SPY_DISPATCHER, SPY$isFirstLevelPropagator);
     }

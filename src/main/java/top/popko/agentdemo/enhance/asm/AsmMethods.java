@@ -6,7 +6,8 @@ import top.popko.agentdemo.handler.hookpoint.SpyDispatcher;
 import top.popko.agentdemo.handler.hookpoint.SpyDispatcherHandler;
 
 public interface AsmMethods {
-    Method SPY_HANDLER$getDispatcher = AsmMethods.InnerHelper.getAsmMethod(SpyDispatcherHandler.class, "getDispatcher");
+    Method SPY_HANDLER$getDispatcher = AsmMethods.InnerHelper.getAsmMethod(
+            SpyDispatcherHandler.class, "getDispatcher");
     Method SPY$enterHttp = AsmMethods.InnerHelper.getAsmMethod(SpyDispatcher.class, "enterHttp");
     Method SPY$leaveHttp = AsmMethods.InnerHelper.getAsmMethod(SpyDispatcher.class, "leaveHttp", Object.class, Object.class);
     Method SPY$isFirstLevelHttp = AsmMethods.InnerHelper.getAsmMethod(SpyDispatcher.class, "isFirstLevelHttp");

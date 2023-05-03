@@ -3,6 +3,7 @@ package top.popko.agentdemo.handler.hookpoint;
 import top.popko.agentdemo.EngineManager;
 import top.popko.agentdemo.handler.hookpoint.controller.HookType;
 import top.popko.agentdemo.handler.hookpoint.controller.impl.*;
+import top.popko.agentdemo.handler.hookpoint.controller.scope.ScopeManager;
 import top.popko.agentdemo.handler.hookpoint.graph.GraphBuilder;
 import top.popko.agentdemo.handler.hookpoint.models.MethodEvent;
 import top.popko.agentdemo.handler.hookpoint.models.policy.*;
@@ -19,20 +20,22 @@ public class SpyDispatcherImpl implements SpyDispatcher {
     @Override
     public void enterHttp() {
         this.methodNamePrint();
+        ScopeManager.SCOPE_TRACKER.getHttpRequestScope().enter();
     }
 
     @Override
     public void leaveHttp(Object request, Object response) {
         this.methodNamePrint();
+        ScopeManager.SCOPE_TRACKER.getHttpRequestScope().leave();
 //        if (EngineManager.isEngineRunning()) {
 //            try {
 //                ScopeManager.SCOPE_TRACKER.getHttpRequestScope().leave();
 //                if (!ScopeManager.SCOPE_TRACKER.getHttpRequestScope().in() && ScopeManager.SCOPE_TRACKER.getHttpEntryScope().in()) {
+        if (!ScopeManager.SCOPE_TRACKER.getHttpRequestScope().in()) {
 //                    EngineManager.maintainRequestCount();
-
-        GraphBuilder.buildAndReport(request, response);
-        EngineManager.cleanThreadState();
-//                }
+            GraphBuilder.buildAndReport(request, response);
+            EngineManager.cleanThreadState();//全部退出后输出json并清理
+        }
 //            } catch (Throwable var4) {
 //                DongTaiLog.error("leave http failed", var4);
 //                EngineManager.cleanThreadState();
@@ -82,7 +85,8 @@ public class SpyDispatcherImpl implements SpyDispatcher {
 
     @Override
     public boolean isFirstLevelSource() {
-        return false;
+//        return false;
+        return true;
     }
 
     @Override
@@ -131,71 +135,61 @@ public class SpyDispatcherImpl implements SpyDispatcher {
     }
 
     public boolean collectMethodPool(Object instance, Object[] argumentArray, Object retValue, String framework, String className, String matchClassName, String methodName, String methodSign, boolean isStatic, int hookType) {
+        if (ScopeManager.SCOPE_TRACKER.getHttpRequestScope().isFirst()) {//限制一次http后匹配污点规则//todo: 放在字节码操作可以减少一些处理,但是if-else报错解决不了
+
 ///*     */     try {
 ///* 312 */       ScopeManager.SCOPE_TRACKER.getPolicyScope().enterAgent();
-        /*     */
-        /* 314 */
-        if (!isCollectAllowed(className, methodName, methodSign, hookType, true)) {
-            /* 315 */
-            return false;
-            /*     */
-        }
-        /*     */
-        /* 318 */
-        if (HookType.SPRINGAPPLICATION.equals(hookType)) {
-            /* 319 */
-            SpringApplicationImpl.getWebApplicationContext(retValue);
-            /*     */
-        } else {
-            /* 321 */
-            MethodEvent event = new MethodEvent(className, matchClassName, methodName, methodSign, instance, argumentArray, retValue);
-            /*     */
-            /* 323 */
-            if (HookType.HTTP.equals(hookType)) {
-                /* 324 */
-                HttpImpl.solveHttp(event);
-                /*     */
+            if (!isCollectAllowed(className, methodName, methodSign, hookType, true)) {
+                return false;
             }
-            /*     */
-        }
+            if (HookType.SPRINGAPPLICATION.equals(hookType)) {
+                SpringApplicationImpl.getWebApplicationContext(retValue);
+            } else {
+                MethodEvent event = new MethodEvent(className, matchClassName, methodName, methodSign, instance, argumentArray, retValue);
+                if (HookType.HTTP.equals(hookType)) {
+                    HttpImpl.solveHttp(event);
+                }
+            }
 ///* 327 */     } catch (Throwable e) {
 ///* 328 */       DongTaiLog.error("collect method pool failed: " + e.toString(), e);
 ///*     */     } finally {
 ///* 330 */       ScopeManager.SCOPE_TRACKER.getPolicyScope().leaveAgent();
 ///*     */     }
-        /* 332 */
+        }
         return false;//todo:没做条件校验,无影响
-        /*     */
     }
 
-    public boolean collectMethod(Object instance, Object[] parameters, Object retObject, String policyKey, String className, String matchedClassName, String methodName, String signature, boolean isStatic) {
+    public boolean
+    collectMethod(Object instance, Object[] parameters, Object retObject, String policyKey, String className, String matchedClassName, String methodName, String signature, boolean isStatic) {
         boolean status = false;
-        try {
+        if (ScopeManager.SCOPE_TRACKER.getHttpRequestScope().in()) {//污点分析时http不为0
+            System.out.println("[+]collectMethod: "+className);
+            try {
 //            ScopeManager.SCOPE_TRACKER.getPolicyScope().enterAgent();
-            PolicyNode policyNode = this.getPolicyNode(policyKey);
-            if (policyNode != null && this.isCollectAllowed(className, methodName, signature, policyNode.getType().getType(), false)) {
-                MethodEvent event = new MethodEvent(className, matchedClassName, methodName, signature, instance, parameters, retObject);
-                if (policyNode instanceof SourceNode) {
-                    new SourceImpl().solveSource(event, (SourceNode) policyNode);
-                    status = true;
-                }
+                PolicyNode policyNode = this.getPolicyNode(policyKey);
+                if (policyNode != null && this.isCollectAllowed(className, methodName, signature, policyNode.getType().getType(), false)) {
+                    MethodEvent event = new MethodEvent(className, matchedClassName, methodName, signature, instance, parameters, retObject);
+                    if (policyNode instanceof SourceNode) {
+                        new SourceImpl().solveSource(event, (SourceNode) policyNode);
+                        status = true;
+                    }
 
-                if (policyNode instanceof PropagatorNode) {
-                    new PropagatorImpl().solvePropagator(event, (PropagatorNode) policyNode, INVOKE_ID_SEQUENCER);
-                    status = true;
-                }
+                    if (policyNode instanceof PropagatorNode) {
+                        new PropagatorImpl().solvePropagator(event, (PropagatorNode) policyNode, INVOKE_ID_SEQUENCER);
+                        status = true;
+                    }
 
-                if (policyNode instanceof SinkNode) {
-                    new SinkImpl().solveSink(event, (SinkNode) policyNode);
-                    status = true;
+                    if (policyNode instanceof SinkNode) {
+                        new SinkImpl().solveSink(event, (SinkNode) policyNode);
+                        status = true;
+                    }
                 }
-            }
-        } catch (Throwable var16) {
+            } catch (Throwable var16) {
 //            DongTaiLog.error("collect method failed", var16);
-        } finally {
+            } finally {
 //            ScopeManager.SCOPE_TRACKER.getPolicyScope().leaveAgent();
+            }
         }
-
         return status;
     }
 

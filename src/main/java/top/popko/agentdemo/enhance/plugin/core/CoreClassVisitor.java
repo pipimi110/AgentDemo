@@ -16,6 +16,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.objectweb.asm.Opcodes;
+
 public class CoreClassVisitor extends AbstractClassVisitor {
     private int classVersion;
 
@@ -75,7 +77,14 @@ public class CoreClassVisitor extends AbstractClassVisitor {
         }
 
         if (matchedNodes.size() > 0) {//只要方法匹配规则，就修改mv
-            mv = new MethodAdviceAdapter(mv, access, name, descriptor, signature, matchedNodes, methodContext, this.taintAdapters);
+            if ("<init>".equals(name)) {
+                //
+//                MethodAdviceAdapter methodAdviceAdapter = new MethodAdviceAdapter(mv, access, name, descriptor, signature, matchedNodes, methodContext, this.taintAdapters);
+//                methodAdviceAdapter.enterMethod();
+                mv = new ConstructorAdviceAdapter(mv, access, name, descriptor, signature, matchedNodes, methodContext, this.taintAdapters);
+            } else {
+                mv = new MethodAdviceAdapter(mv, access, name, descriptor, signature, matchedNodes, methodContext, this.taintAdapters);
+            }
             this.setTransformed();
         }
 
