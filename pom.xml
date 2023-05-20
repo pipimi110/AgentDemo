@@ -99,11 +99,11 @@
             <scope>system</scope>
             <systemPath>/C:/Program Files/Java/jdk1.8.0_201/lib/tools_slim.jar</systemPath>
         </dependency>
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-core</artifactId>
-            <version>9.0.63</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.apache.tomcat.embed</groupId>-->
+<!--            <artifactId>tomcat-embed-core</artifactId>-->
+<!--            <version>9.0.63</version>-->
+<!--        </dependency>-->
     </dependencies>
 
 </project>

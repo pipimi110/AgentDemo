@@ -23,7 +23,7 @@ public class PluginManager {
     }
 
     private void registerPlugins() {
-        this.plugins.add(new DispatchSpringApplication());
+//        this.plugins.add(new DispatchSpringApplication());
         this.plugins.add(new DispatchClassPlugin());
         this.plugins.add(new DispatchJ2ee());
     }

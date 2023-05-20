@@ -20,9 +20,9 @@ public class J2eeAdviceAdapter extends AbstractAdviceAdapter {
         this.enterHttp();
 //        this.isFirstLevelHttp();
 //        this.mv.visitJumpInsn(153, elseLabel);
-        this.cloneHttpServletRequest();
+//        this.cloneHttpServletRequest();
         this.captureMethodState(-1, HookType.HTTP.getValue(), false);
-        this.cloneHttpServletResponse();
+//        this.cloneHttpServletResponse();
 //        this.mark(elseLabel);
     }
 

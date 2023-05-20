@@ -39,6 +39,7 @@ public class DefineTransformer implements ClassFileTransformer {
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
 //        return javassistTransform(loader, className, classBeingRedefined, protectionDomain, classfileBuffer);
         return asmTransform(loader, className, classBeingRedefined, protectionDomain, classfileBuffer);
+//        return null;
     }
 
     public boolean tmpClassFilter(String classname) {

@@ -53,12 +53,11 @@ public class ConstructorAdviceAdapter extends AbstractAdviceAdapter {
     public void visitCode() {
         super.visitCode();
         // 在方法开始处插入要执行的代码
-        mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
-        mv.visitLdcInsn("Code executed before the method body");
-        mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
+//        mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+//        mv.visitLdcInsn("[]Code executed before the method body");
+//        mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", false);
         enterConstructor();//在方法执行时插入代码并优先执行，可以使用 AdviceAdapter 的 visitCode() 方法，在方法开始执行时插入代码
     }
-
     @Override
     protected void before() {
 

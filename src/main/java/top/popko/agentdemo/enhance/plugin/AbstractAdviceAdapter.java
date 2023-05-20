@@ -78,17 +78,6 @@ public abstract class AbstractAdviceAdapter extends AdviceAdapter implements Asm
 
     }
 
-//    public void visitMaxs(int maxStack, int maxLocals) {
-//        this.mark(this.catchLabel);
-//        this.visitTryCatchBlock(this.tryLabel, this.catchLabel, this.mark(), ASM_TYPE_THROWABLE.getInternalName());
-//        this.after(191);
-//        this.throwException();
-//        super.visitMaxs(maxStack, maxLocals);
-//    }
-
-//    public void visitMaxsNew(int maxStack, int maxLocals) {
-//        super.visitMaxs(maxStack, maxLocals);
-//    }
 
     public void invokeSpyHandlerGetDispatcher(int opcode, boolean captureRet) {
         this.newLocal(ASM_TYPE_OBJECT);

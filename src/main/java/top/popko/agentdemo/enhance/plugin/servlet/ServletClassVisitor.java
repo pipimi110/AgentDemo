@@ -53,7 +53,11 @@ public class ServletClassVisitor extends AbstractClassVisitor {
     }
 
     private boolean isServiceArgs(Type[] typeOfArgs) {
-        return typeOfArgs.length == 2 && this.HTTP_SERVLET_REQUEST.equals(typeOfArgs[0].getClassName()) && this.HTTP_SERVLET_RESPONSE.equals(typeOfArgs[1].getClassName());
+        return typeOfArgs.length == 2 && (
+                (this.HTTP_SERVLET_REQUEST.equals(typeOfArgs[0].getClassName()) && this.HTTP_SERVLET_RESPONSE.equals(typeOfArgs[1].getClassName()))
+                        ||
+                (this.SERVLET_REQUEST.equals(typeOfArgs[0].getClassName()) && this.SERVLET_RESPONSE.equals(typeOfArgs[1].getClassName()))
+                );
     }
 
     private boolean isJakartaArgs(Type[] typeOfArgs) {

@@ -30,13 +30,9 @@ public class MethodAdviceAdapter extends AbstractAdviceAdapter {
     }
 
     protected void onMethodEnter() {
-//        if (this.policyNodes != null && !this.policyNodes.isEmpty()) {
-//            this.tryLabel = new Label();
-//            this.visitLabel(this.tryLabel);
-        this.enterMethod();
-//            this.catchLabel = new Label();
-//            this.exHandler = new Label();
-//        }
+        if (this.policyNodes != null && !this.policyNodes.isEmpty()) {
+            this.enterMethod();
+        }
 
     }
 
@@ -67,20 +63,7 @@ public class MethodAdviceAdapter extends AbstractAdviceAdapter {
 //            methodAdapter.onMethodExit(this, this.mv, opcode, this.context, this.policyNodes);
             methodAdapter.onMethodExit(this, this.mv, opcode, this.policyNodes);
         }
-
     }
-
-//    public void visitMaxs(int maxStack, int maxLocals) {
-//        if (this.policyNodes != null && !this.policyNodes.isEmpty()) {
-//            this.visitLabel(this.catchLabel);
-//            this.visitLabel(this.exHandler);
-//            this.leaveMethod(191);
-//            this.throwException();
-//            this.visitTryCatchBlock(this.tryLabel, this.catchLabel, this.exHandler, ASM_TYPE_THROWABLE.getInternalName());
-//            super.visitMaxsNew(maxStack, maxLocals);
-//        }
-//
-//    }
 
 
 }

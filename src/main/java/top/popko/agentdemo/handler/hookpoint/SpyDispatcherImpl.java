@@ -54,7 +54,9 @@ public class SpyDispatcherImpl implements SpyDispatcher {
 //            return req;
 //        } else {
         try {
-            return HttpImpl.cloneRequest(req, isJakarta);
+//            return HttpImpl.cloneRequest(req, isJakarta);
+            HttpImpl.cloneRequest(req, isJakarta);
+            return req;
         } catch (Throwable var4) {
             return req;
         }
@@ -66,7 +68,8 @@ public class SpyDispatcherImpl implements SpyDispatcher {
 //            return response;
 //        } else {
         try {
-            return HttpImpl.cloneResponse(response, isJakarta);
+//            return HttpImpl.cloneResponse(response, isJakarta);
+            return response;
         } catch (Throwable var4) {
             return response;
         }

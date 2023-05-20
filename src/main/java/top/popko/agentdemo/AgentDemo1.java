@@ -3,6 +3,7 @@ package top.popko.agentdemo;
 
 import top.popko.agentdemo.util.IASTClassLoader;
 
+import java.io.IOException;
 import java.lang.instrument.Instrumentation;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -23,7 +24,12 @@ public class AgentDemo1 {
     }
 
     public static void insertHook(String agentArgs, Instrumentation inst) {
-        EngineManager.insertHook(agentArgs, inst);
+        try {
+            JarFileHelper.addJarToBootstrap(inst);
+            EngineManager.insertHook(agentArgs, inst);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 //        try {
 //            if (IAST_CLASS_LOADER == null) {
 //                IAST_CLASS_LOADER = new IASTClassLoader("D:\\javaWebTool\\AgentDemo_myiast\\target\\AgentDemo-1.1-SNAPSHOT-jar-with-dependencies.jar");

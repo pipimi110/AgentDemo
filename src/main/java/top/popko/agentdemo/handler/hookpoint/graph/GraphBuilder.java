@@ -3,7 +3,7 @@ package top.popko.agentdemo.handler.hookpoint.graph;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import top.popko.agentdemo.EngineManager;
-import top.popko.agentdemo.handler.hookpoint.controller.impl.HttpImpl;
+//import top.popko.agentdemo.handler.hookpoint.controller.impl.HttpImpl;
 import top.popko.agentdemo.handler.hookpoint.models.MethodEvent;
 import top.popko.agentdemo.util.HttpClientUtils;
 
@@ -59,7 +59,7 @@ public class GraphBuilder {
 
     public static String convertToReport(List<GraphNode> nodeList, Object request, Object response) {
         Map<String, Object> requestMeta = (Map) EngineManager.REQUEST_CONTEXT.get();
-        Map<String, Object> responseMeta = response == null ? null : HttpImpl.getResponseMeta(response);
+//        Map<String, Object> responseMeta = response == null ? null : HttpImpl.getResponseMeta(response);
         JSONObject report = new JSONObject();
         JSONObject detail = new JSONObject();
         JSONArray methodPool = new JSONArray();

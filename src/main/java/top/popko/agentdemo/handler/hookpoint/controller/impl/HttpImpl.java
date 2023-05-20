@@ -3,13 +3,14 @@ package top.popko.agentdemo.handler.hookpoint.controller.impl;
 import top.popko.agentdemo.EngineManager;
 import top.popko.agentdemo.config.ConfigMatcher;
 import top.popko.agentdemo.handler.hookpoint.controller.wrapper.ServletRequestWrapper;
-import top.popko.agentdemo.handler.hookpoint.controller.wrapper.ServletResponseWrapper;
+//import top.popko.agentdemo.handler.hookpoint.controller.wrapper.ServletResponseWrapper;
 import top.popko.agentdemo.handler.hookpoint.models.MethodEvent;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+//import javax.servlet.http.HttpServletRequest;
+//import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Map;
 
 public class HttpImpl {
@@ -47,29 +48,30 @@ public class HttpImpl {
 //
 //    }
 
-    private static void loadCloneResponseMethod() {
-        if (cloneResponseMethod == null) {
-            try {
-                if (CLASS_OF_SERVLET_PROXY == null) {
-                    return;
-                }
-
-                cloneResponseMethod = CLASS_OF_SERVLET_PROXY.getDeclaredMethod("cloneResponse", Object.class, Boolean.TYPE);
-            } catch (NoSuchMethodException var1) {
-//                DongTaiLog.error(var1);
-            }
-        }
-
-    }
+//    private static void loadCloneResponseMethod() {
+//        if (cloneResponseMethod == null) {
+//            try {
+//                if (CLASS_OF_SERVLET_PROXY == null) {
+//                    return;
+//                }
+//
+//                cloneResponseMethod = CLASS_OF_SERVLET_PROXY.getDeclaredMethod("cloneResponse", Object.class, Boolean.TYPE);
+//            } catch (NoSuchMethodException var1) {
+////                DongTaiLog.error(var1);
+//            }
+//        }
+//
+//    }
     public static Object cloneRequest(Object request, boolean isJakarta) {
 //        return isJakarta ? new JakartaRequestWrapper((HttpServletRequest)request) : new ServletRequestWrapper((javax.servlet.http.HttpServletRequest)request);
-        return new ServletRequestWrapper((HttpServletRequest) request);
+        return new ServletRequestWrapper(request);
     }
 
     public static Object cloneResponse(Object response, boolean isJakarta) {
 //        REQUEST_META.remove();
 //        return isJakarta ? new JakartaResponseWrapper((HttpServletResponse)response) : new ServletResponseWrapper((javax.servlet.http.HttpServletResponse)response);
-        return new ServletResponseWrapper((HttpServletResponse) response);
+//        return new ServletResponseWrapper(response);
+        return (response);
     }
 //    public static Object cloneRequest(Object req, boolean isJakarta) {
 //        if (req == null) {
@@ -129,9 +131,39 @@ public class HttpImpl {
 //        return var2;
 //    }
 
+    public static String getRequestInfo(Object request,String methodName){
+        try {
+            return (String) request.getClass().getDeclaredMethod(methodName).invoke(request);
+        } catch (Exception e) {
+            return "no info";
+        }
+    }
     public static Map<String, Object> getRequestMeta(Object request) throws InvocationTargetException, IllegalAccessException, NoSuchMethodException {
-        Method methodOfRequestMeta = request.getClass().getDeclaredMethod("getRequestMeta");
-        return (Map)methodOfRequestMeta.invoke(request);
+        Map<String, Object> requestMeta = new HashMap(16);
+//        requestMeta.put("contextPath", this.getContextPath());
+        requestMeta.put("contextPath", getRequestInfo(request,"getContextPath"));
+//        requestMeta.put("servletPath", this.getServletPath());
+        requestMeta.put("servletPath", getRequestInfo(request,"getServletPath"));
+//        requestMeta.put("requestURL", this.getRequestURL());
+        requestMeta.put("requestURL", getRequestInfo(request,"getRequestURL"));
+//        requestMeta.put("requestURI", this.getRequestURI());
+        requestMeta.put("requestURI", getRequestInfo(request,"getRequestURI"));
+//        requestMeta.put("method", this.getMethod());
+        requestMeta.put("method", getRequestInfo(request,"getMethod"));
+//        requestMeta.put("serverName", this.getServerName());
+//        requestMeta.put("serverPort", this.getServerPort());
+//        requestMeta.put("queryString", this.getQueryString());
+        requestMeta.put("queryString", getRequestInfo(request,"getQueryString"));
+//        requestMeta.put("protocol", this.getProtocol());
+//        requestMeta.put("scheme", this.getScheme());
+//        requestMeta.put("remoteAddr", this.getDongTaiRemoteAddr());
+//        requestMeta.put("secure", this.isSecure());
+//        requestMeta.put("body", "");
+//        requestMeta.put("headers", this.getHeaders());
+//        requestMeta.put("replay-request", null != this.getHeader("dongtai-replay-id"));
+        return requestMeta;
+//        Method methodOfRequestMeta = request.getClass().getDeclaredMethod("getRequestMeta");
+//        return (Map)methodOfRequestMeta.invoke(request);
     }
 //
 //    public static String getPostBody(Object request) {
@@ -149,24 +181,24 @@ public class HttpImpl {
 //        return null;
 //    }
 //
-    public static Map<String, Object> getResponseMeta(Object response) {
-        Method methodOfRequestMeta = null;
-
-        try {
-            methodOfRequestMeta = response.getClass().getDeclaredMethod("getResponseMeta", Boolean.TYPE);
-//            boolean getBody = (Boolean)ConfigBuilder.getInstance().getConfig(ConfigKey.REPORT_RESPONSE_BODY).get();
-            boolean getBody = true;
-            return (Map)methodOfRequestMeta.invoke(response, getBody);
-        } catch (NoSuchMethodException var3) {
-//            DongTaiLog.error("HttpImpl getResponseMeta failed", var3);
-        } catch (IllegalAccessException var4) {
-//            DongTaiLog.error("HttpImpl getResponseMeta failed", var4);
-        } catch (InvocationTargetException var5) {
-//            DongTaiLog.error("HttpImpl getResponseMeta failed", var5);
-        }
-
-        return null;
-    }
+//    public static Map<String, Object> getResponseMeta(Object response) {
+//        Method methodOfRequestMeta = null;
+//
+//        try {
+//            methodOfRequestMeta = response.getClass().getDeclaredMethod("getResponseMeta", Boolean.TYPE);
+////            boolean getBody = (Boolean)ConfigBuilder.getInstance().getConfig(ConfigKey.REPORT_RESPONSE_BODY).get();
+//            boolean getBody = true;
+//            return (Map)methodOfRequestMeta.invoke(response, getBody);
+//        } catch (NoSuchMethodException var3) {
+////            DongTaiLog.error("HttpImpl getResponseMeta failed", var3);
+//        } catch (IllegalAccessException var4) {
+////            DongTaiLog.error("HttpImpl getResponseMeta failed", var4);
+//        } catch (InvocationTargetException var5) {
+////            DongTaiLog.error("HttpImpl getResponseMeta failed", var5);
+//        }
+//
+//        return null;
+//    }
 
     public static void solveHttp(MethodEvent event) {
         System.out.println("[+]solveHttp");
