@@ -15,15 +15,8 @@ public class J2eeAdviceAdapter extends AbstractAdviceAdapter {
     }
 
     protected void before() {
-//        this.mark(this.tryLabel);
-//        Label elseLabel = new Label();
         this.enterHttp();
-//        this.isFirstLevelHttp();
-//        this.mv.visitJumpInsn(153, elseLabel);
-//        this.cloneHttpServletRequest();
         this.captureMethodState(-1, HookType.HTTP.getValue(), false);
-//        this.cloneHttpServletResponse();
-//        this.mark(elseLabel);
     }
 
     protected void after(int opcode) {
@@ -40,26 +33,5 @@ public class J2eeAdviceAdapter extends AbstractAdviceAdapter {
         this.loadArg(0);
         this.loadArg(1);
         this.invokeInterface(ASM_TYPE_SPY_DISPATCHER, SPY$leaveHttp);
-    }
-
-    private void isFirstLevelHttp() {
-        this.invokeStatic(ASM_TYPE_SPY_HANDLER, SPY_HANDLER$getDispatcher);
-        this.invokeInterface(ASM_TYPE_SPY_DISPATCHER, SPY$isFirstLevelHttp);
-    }
-
-    protected void cloneHttpServletRequest() {
-        this.invokeStatic(ASM_TYPE_SPY_HANDLER, SPY_HANDLER$getDispatcher);
-        this.loadArg(0);
-        this.push(this.isJakarta);
-        this.invokeInterface(ASM_TYPE_SPY_DISPATCHER, SPY$cloneRequest);
-        this.storeArg(0);
-    }
-
-    protected void cloneHttpServletResponse() {
-        this.invokeStatic(ASM_TYPE_SPY_HANDLER, SPY_HANDLER$getDispatcher);
-        this.loadArg(1);
-        this.push(this.isJakarta);
-        this.invokeInterface(ASM_TYPE_SPY_DISPATCHER, SPY$cloneResponse);
-        this.storeArg(1);
     }
 }

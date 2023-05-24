@@ -15,6 +15,6 @@ public abstract class TaintAdapter implements AsmTypes, AsmMethods {
 //    public abstract void onMethodEnter(MethodAdviceAdapter var1, MethodVisitor var2, MethodContext var3, Set<PolicyNode> var4);
     public abstract void onMethodEnter(AbstractAdviceAdapter var1, MethodVisitor var2, Set<PolicyNode> var4);
 
-//    public abstract void onMethodExit(MethodAdviceAdapter var1, MethodVisitor var2, int var3, MethodContext var4, Set<PolicyNode> var5);
     public abstract void onMethodExit(AbstractAdviceAdapter var1, MethodVisitor var2, int var3, Set<PolicyNode> var5);
+//    public abstract void onMethodExit(MethodAdviceAdapter var1, MethodVisitor var2, int var3, MethodContext var4, Set<PolicyNode> var5);
 }

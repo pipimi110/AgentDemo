@@ -26,14 +26,9 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class DefineTransformer implements ClassFileTransformer {
-    private Config config;
     private static IastClassDiagram classDiagram = IastClassDiagram.getInstance();
 
     DefineTransformer(Instrumentation inst) {
-    }
-
-    DefineTransformer(Instrumentation inst, Config javassistConfig) {
-        this.config = javassistConfig;
     }
 
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
@@ -42,12 +37,6 @@ public class DefineTransformer implements ClassFileTransformer {
 //        return null;
     }
 
-    public boolean tmpClassFilter(String classname) {
-        if (classname.startsWith("sun") || classname.startsWith("java") || classname.contains("$")) {
-            return false;
-        }
-        return true;
-    }
 
     public byte[] asmTransform(ClassLoader loader, String internalClassName, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
 //        for (String notTransformClass : notTransformList) {
@@ -61,9 +50,6 @@ public class DefineTransformer implements ClassFileTransformer {
         if (null == classBeingRedefined && !ConfigMatcher.getInstance().canHook(internalClassName)) {
             return null;
         }
-//        if (!tmpClassFilter(internalClassName)) {//todo: 注释后java.lang.String.concat 重载报错
-//            return null;
-//        }
         String className = internalClassName.replace("/", ".");
         return adviceAdapterTest1(loader, classfileBuffer);
     }
@@ -93,24 +79,6 @@ public class DefineTransformer implements ClassFileTransformer {
         return classfileBuffer;
     }
 
-    public byte[] javassistTransform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
-//        if (!LoadCache.check(className)) {
-        className = className.replace('/', '.');
-//        System.out.println(String.format("[TEST] 检测到加载器 %s 新加载类: %s", loader == null ? "null" : loader.getClass().getName(), className));
-//            return PluginManager.check(className, classfileBuffer);
-        Iterator it = config.getBlackClassMap().keySet().iterator();
-        while (it.hasNext()) {
-            String key = (String) it.next();
-            if (className.equals(key)) {
-                byte[] bytess = cookClass(className, config.getBlackClassMap().get(className));
-                return bytess == null ? classfileBuffer : bytess;
-            }
-        }
-//        }
-//        byte[] bytes = cookMemShell(className);
-//        return bytes == null ? classfileBuffer : bytes;
-        return classfileBuffer;
-    }
 
     public void retransform(Instrumentation inst) {
         Class[] classes = inst.getAllLoadedClasses();

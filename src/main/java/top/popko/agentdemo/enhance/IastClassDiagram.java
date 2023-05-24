@@ -172,7 +172,6 @@ public class IastClassDiagram {
                         }
                     }
                 } catch (Throwable var13) {
-//                    DongTaiLog.error(var13);
                 }
             }
 

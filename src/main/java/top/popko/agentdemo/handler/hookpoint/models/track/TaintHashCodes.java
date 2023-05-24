@@ -59,7 +59,6 @@ public class TaintHashCodes extends ThreadLocal<HashSet<Integer>> {
                     event.addTargetHash(subHashCode);
             }
         } catch (Exception var9) {
-//                DongTaiLog.error("add object to taint pool failed", var9);
         }
 
     }

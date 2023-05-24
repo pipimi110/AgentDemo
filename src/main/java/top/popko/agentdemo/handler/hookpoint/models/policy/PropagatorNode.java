@@ -21,13 +21,6 @@ public class PropagatorNode extends TaintFlowNode {
         return PolicyNodeType.PROPAGATOR;
     }
 
-//    public TaintCommand getCommand() {
-//        return this.command;
-//    }
-//
-//    public void setCommand(TaintCommand command) {
-//        this.command = command;
-//    }
 
     public String[] getCommandArguments() {
         return this.commandArguments;

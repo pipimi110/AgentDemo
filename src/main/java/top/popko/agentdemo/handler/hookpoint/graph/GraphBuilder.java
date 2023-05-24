@@ -34,9 +34,6 @@ public class GraphBuilder {
             }
 //            ThreadPools.sendPriorityReport("/api/v1/report/upload", report);
         } catch (Throwable var7) {
-//            DongTaiLog.error("report request failed", var7);
-        } finally {
-//            ScopeManager.SCOPE_TRACKER.getPolicyScope().leaveAgent();
         }
 
     }

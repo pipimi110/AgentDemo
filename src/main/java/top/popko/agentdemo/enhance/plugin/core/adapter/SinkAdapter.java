@@ -22,13 +22,7 @@ public class SinkAdapter extends TaintAdapter {
             PolicyNode policyNode = (PolicyNode)var5.next();
             if (policyNode instanceof SinkNode) {
                 this.enterScope(adapter);
-//                Label elseLabel = new Label();
-//                Label endLabel = new Label();
-//                this.isFirstScope(adapter);
-//                adapter.visitJumpInsn(Opcodes.IFEQ, elseLabel);
                 adapter.trackMethod(-1, policyNode, false);
-//                adapter.mark(elseLabel);
-//                adapter.mark(endLabel);
             }
         }
 
@@ -55,10 +49,5 @@ public class SinkAdapter extends TaintAdapter {
     private void leaveScope(AbstractAdviceAdapter adapter) {
         adapter.invokeStatic(ASM_TYPE_SPY_HANDLER, SPY_HANDLER$getDispatcher);
         adapter.invokeInterface(ASM_TYPE_SPY_DISPATCHER, SPY$leaveSink);
-    }
-
-    private void isFirstScope(AbstractAdviceAdapter adapter) {
-        adapter.invokeStatic(ASM_TYPE_SPY_HANDLER, SPY_HANDLER$getDispatcher);
-        adapter.invokeInterface(ASM_TYPE_SPY_DISPATCHER, SPY$isFirstLevelSink);
     }
 }

@@ -8,10 +8,6 @@ public interface SpyDispatcher {
 
     boolean isFirstLevelHttp();
 
-    Object cloneRequest(Object var1, boolean var2);
-
-    Object cloneResponse(Object var1, boolean var2);
-
     void enterSource();
 
     void leaveSource();

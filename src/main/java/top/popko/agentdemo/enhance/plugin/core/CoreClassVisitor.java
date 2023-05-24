@@ -37,16 +37,7 @@ public class CoreClassVisitor extends AbstractClassVisitor {
             methodContext.setDescriptor(descriptor);
             methodContext.setParameters(AsmUtils.buildParameterTypes(descriptor));
             String matchedSignature = AsmUtils.buildSignature(this.context.getMatchedClassName(), name, descriptor);
-//                MethodVisitor mvx = this.lazyAop(mv, access, name, descriptor, signature, methodContext);
             MethodVisitor mvx = this.lazyAop(mv, access, name, descriptor, matchedSignature, methodContext);
-//                boolean methodIsTransformed = mvx instanceof MethodAdviceAdapter;
-//                if (methodIsTransformed && this.classVersion < 50) {
-//                    mvx = new JSRInlinerAdapter((MethodVisitor)mvx, access, name, descriptor, signature, exceptions);
-//                }
-
-//                if (methodIsTransformed) {
-//                    DongTaiLog.trace("rewrite method {} for listener[class={}]", new Object[]{matchedSignature, this.context.getClassName()});
-//                }
 
             return mvx;
         } else {

@@ -32,14 +32,9 @@ public class ServletClassVisitor extends AbstractClassVisitor {
         Type[] typeOfArgs = Type.getArgumentTypes(desc);
         String signCode = AsmUtils.buildSignature(this.context.getClassName(), name, desc);
         if (this.isService(name, typeOfArgs) || this.isJakarta && this.isJakartaArgs(typeOfArgs) || this.isFaces && this.isFacesArgs(typeOfArgs)) {
-//            DongTaiLog.debug("Adding HTTP tracking for type {}", new Object[]{this.context.getClassName()});
             mv = new J2eeAdviceAdapter(mv, access, name, desc, signCode, this.context, this.isJakarta);
             this.setTransformed();
         }
-
-//        if (this.hasTransformed()) {
-//            DongTaiLog.trace("rewrite method {}.{} for listener[match={}]", new Object[]{this.context.getClassName(), name, this.context.getMatchedClassName()});
-//        }
 
         return mv;
     }

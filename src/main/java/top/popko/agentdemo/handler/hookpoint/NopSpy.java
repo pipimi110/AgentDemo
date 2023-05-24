@@ -14,14 +14,6 @@ public class NopSpy implements SpyDispatcher {
         return false;
     }
 
-    public Object cloneRequest(Object req, boolean isJakarta) {
-        return null;
-    }
-
-    public Object cloneResponse(Object res, boolean isJakarta) {
-        return null;
-    }
-
     public void enterSource() {
     }
 

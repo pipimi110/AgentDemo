@@ -8,16 +8,13 @@ import top.popko.agentdemo.handler.hookpoint.models.policy.PolicyNode;
 
 import java.util.Set;
 
-//public class ConstructorAdviceAdapter extends AbstractAdviceAdapter implements AsmTypes, AsmMethods {
 public class ConstructorAdviceAdapter extends AbstractAdviceAdapter {
     private final Set<PolicyNode> policyNodes;
     private final TaintAdapter[] methodAdapters;
     private Label exHandler;
 
     public ConstructorAdviceAdapter(MethodVisitor mv, int access, String name, String descriptor, String signature, Set<PolicyNode> policyNodes, MethodContext context, TaintAdapter[] methodAdapters) {
-//    public ConstructorAdviceAdapter(MethodVisitor mv, int access, String name, String descriptor, String signature,MethodAdapter[] methodAdapters) {
         super(mv, access, name, descriptor, signature, context);
-//        super(mv, access, name, descriptor, signature);
         this.policyNodes = policyNodes;
         this.methodAdapters = methodAdapters;
     }
@@ -28,7 +25,6 @@ public class ConstructorAdviceAdapter extends AbstractAdviceAdapter {
 
         for (int var3 = 0; var3 < var2; ++var3) {
             TaintAdapter methodAdapter = var1[var3];
-//            methodAdapter.onMethodEnter(this, this.mv, this.context, this.policyNodes);
             methodAdapter.onMethodEnter(this, this.mv, this.policyNodes);
         }
 
@@ -44,7 +40,6 @@ public class ConstructorAdviceAdapter extends AbstractAdviceAdapter {
 
         for (int var4 = 0; var4 < var3; ++var4) {
             TaintAdapter methodAdapter = var2[var4];
-//            methodAdapter.onMethodExit(this, this.mv, opcode, this.context, this.policyNodes);
             methodAdapter.onMethodExit(this, this.mv, opcode, this.policyNodes);
         }
 

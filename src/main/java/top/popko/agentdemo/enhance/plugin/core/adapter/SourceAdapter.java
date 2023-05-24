@@ -39,19 +39,7 @@ public class SourceAdapter extends TaintAdapter {
         while (var6.hasNext()) {
             PolicyNode policyNode = (PolicyNode) var6.next();
             if (policyNode instanceof SourceNode) {
-//                Label elseLabel = new Label();
-//                this.isFirstScope(adapter);
-////                mv.visitJumpInsn(153, elseLabel);
-//                // 将返回值从操作数栈中弹出，并将其存储到本地变量中
-//                int iftestReturn = adapter.newLocal(Type.BOOLEAN_TYPE);
-//                adapter.visitVarInsn(ISTORE, iftestReturn);
-//// 使用 IFNE 指令校验返回值是否为 true
-//                adapter.visitVarInsn(ILOAD, iftestReturn);
-////                mv.visitJumpInsn(IFEQ, elseLabel);//iftestReturn!=0跳转到label
-                // 如果返回值为 true，执行相应的操作
                 adapter.trackMethod(opcode, policyNode, true);
-                // 标签：如果返回值为 false，则跳过上一步的操作，继续执行后面的指令
-//                adapter.mark(elseLabel);
                 this.leaveScope(adapter);
             }
         }
@@ -65,10 +53,5 @@ public class SourceAdapter extends TaintAdapter {
     private void leaveScope(AbstractAdviceAdapter adapter) {
         adapter.invokeStatic(ASM_TYPE_SPY_HANDLER, SPY_HANDLER$getDispatcher);
         adapter.invokeInterface(ASM_TYPE_SPY_DISPATCHER, SPY$leaveSource);
-    }
-
-    private void isFirstScope(AbstractAdviceAdapter adapter) {
-        adapter.invokeStatic(ASM_TYPE_SPY_HANDLER, SPY_HANDLER$getDispatcher);
-        adapter.invokeInterface(ASM_TYPE_SPY_DISPATCHER, SPY$isFirstLevelSource);
     }
 }

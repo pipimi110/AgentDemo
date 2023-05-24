@@ -10,25 +10,15 @@ public interface AsmMethods {
             SpyDispatcherHandler.class, "getDispatcher");
     Method SPY$enterHttp = AsmMethods.InnerHelper.getAsmMethod(SpyDispatcher.class, "enterHttp");
     Method SPY$leaveHttp = AsmMethods.InnerHelper.getAsmMethod(SpyDispatcher.class, "leaveHttp", Object.class, Object.class);
-    Method SPY$isFirstLevelHttp = AsmMethods.InnerHelper.getAsmMethod(SpyDispatcher.class, "isFirstLevelHttp");
-    Method SPY$cloneRequest = AsmMethods.InnerHelper.getAsmMethod(SpyDispatcher.class, "cloneRequest", Object.class, Boolean.TYPE);
-    Method SPY$cloneResponse = AsmMethods.InnerHelper.getAsmMethod(SpyDispatcher.class, "cloneResponse", Object.class, Boolean.TYPE);
     Method SPY$enterSource = AsmMethods.InnerHelper.getAsmMethod(SpyDispatcher.class, "enterSource");
     Method SPY$leaveSource = AsmMethods.InnerHelper.getAsmMethod(SpyDispatcher.class, "leaveSource");
-    Method SPY$isFirstLevelSource = AsmMethods.InnerHelper.getAsmMethod(SpyDispatcher.class, "isFirstLevelSource");
     Method SPY$enterPropagator = AsmMethods.InnerHelper.getAsmMethod(SpyDispatcher.class, "enterPropagator", Boolean.TYPE);
     Method SPY$leavePropagator = AsmMethods.InnerHelper.getAsmMethod(SpyDispatcher.class, "leavePropagator", Boolean.TYPE);
-    Method SPY$isFirstLevelPropagator = AsmMethods.InnerHelper.getAsmMethod(SpyDispatcher.class, "isFirstLevelPropagator");
     Method SPY$enterSink = AsmMethods.InnerHelper.getAsmMethod(SpyDispatcher.class, "enterSink");
     Method SPY$leaveSink = AsmMethods.InnerHelper.getAsmMethod(SpyDispatcher.class, "leaveSink");
-    Method SPY$isFirstLevelSink = AsmMethods.InnerHelper.getAsmMethod(SpyDispatcher.class, "isFirstLevelSink");
     Method SPY$collectMethodPool = AsmMethods.InnerHelper.getAsmMethod(SpyDispatcher.class, "collectMethodPool", Object.class, Object[].class, Object.class, String.class, String.class, String.class, String.class, String.class, Boolean.TYPE, Integer.TYPE);
     //接口也可以查找到相关实例的方法
     Method SPY$collectMethod = AsmMethods.InnerHelper.getAsmMethod(SpyDispatcher.class, "collectMethod", Object.class, Object[].class, Object.class, String.class, String.class, String.class, String.class, String.class, Boolean.TYPE);
-    Method SPY$reportService = AsmMethods.InnerHelper.getAsmMethod(SpyDispatcher.class, "reportService", String.class, String.class, String.class, String.class, String.class);
-    Method SPY$isReplayRequest = AsmMethods.InnerHelper.getAsmMethod(SpyDispatcher.class, "isReplayRequest");
-    Method SPY$isNotReplayRequest = AsmMethods.InnerHelper.getAsmMethod(SpyDispatcher.class, "isNotReplayRequest");
-
 
     public static class InnerHelper {
         private InnerHelper() {
